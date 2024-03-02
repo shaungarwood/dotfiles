@@ -1,0 +1,51 @@
+alias brails="bundle exec rails"
+alias bserver="bundle exec rails server"
+alias brubocop="bundle exec rubocop"
+alias c=clear
+alias delete_older_than_3_days="find . -mtime +3 -delete"
+alias dc=docker-compose
+alias fuck='sudo $(history -p \!\!)'
+extract () {
+   if [ -f $1 ] ; then
+       case $1 in
+           *.tar.bz2)   tar xvjf $1;;
+           *.tar.gz)    tar xvzf $1;;
+           *.bz2)       bunzip2 $1 ;;
+           *.rar)       unrar x $1 ;;
+           *.gz)        gunzip $1  ;;
+           *.tar)       tar xvf $1 ;;
+           *.tbz2)      tar xvjf $1;;
+           *.tgz)       tar xvzf $1;;
+           *.zip)       unzip $1   ;;
+           *.Z)         uncompress $1  ;;
+           *.7z)        7z x $1;;
+           *) echo "don't know how to extract '$1'..." ;;
+       esac
+   else
+       echo "'$1' is not a valid file!"
+   fi
+}
+alias jp="joplin"
+alias largest-dir="du -sx ./* 2>/dev/null | sort -n"
+alias ll="ls -lht --color"
+alias lla="ls -laht --color"
+alias new-vim="nvim -u ~/.config/nvim/init-new.lua"
+alias mitm='mitmproxy --set console_focus_follow=true --set ssl_insecure=true --view-filter '\''!~a'\'
+alias netflix="chromium --app=https://netflix.com"
+alias nm-restart="sudo service NetworkManager restart"
+alias o="open"
+alias plex="chromium --app=https://app.plex.tv/desktop"
+alias p='ping -s -v'
+alias ssh-proxy="ssh -v -4 -D 52804 -N"
+alias sudo='sudo -p "Ah ah ah, didnt say the magic word: "'
+alias v='vim'
+alias vc="veracrypt -t -k '' --pim=0 --protect-hidden=no"
+# ----- BEGIN -----
+alias vim=nvim
+# ----- END -----
+
+# rails
+alias r='bin/rails'
+alias rc='bin/rails console'
+alias brspec='bundle exec rspec'
+alias brubocop='bundle exec rubocop'
