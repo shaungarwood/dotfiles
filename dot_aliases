@@ -2,6 +2,7 @@ alias brails="bundle exec rails"
 alias bserver="bundle exec rails server"
 alias brubocop="bundle exec rubocop"
 alias c=clear
+alias cm="chezmoi -v"
 alias delete_older_than_3_days="find . -mtime +3 -delete"
 alias dc=docker-compose
 alias fuck='sudo $(history -p \!\!)'
