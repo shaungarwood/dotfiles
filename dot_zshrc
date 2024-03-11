@@ -1,24 +1,16 @@
+# TMUX stuff
 if [ "$TMUX" = "" ]; then tmux; fi
 
-# Lines configured by zsh-newuser-install
+# General ZSH stuff
 HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
-setopt appendhistory autocd notify no_share_history
-unsetopt beep
-bindkey -v
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
-zstyle :compinstall filename '~/.zshrc'
-
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-source ~/.antigenrc
+HISTSIZE=10000
+SAVEHIST=10000
 EDITOR='nvim'
-
 path+=('/home/csw/bin')
-
-eval "$(/home/csw/.rbenv/bin/rbenv init - zsh)"
-
 source "$HOME/.aliases"
+
+# Oh My ZSH stuff
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+plugins=(git)
+source $ZSH/oh-my-zsh.sh
