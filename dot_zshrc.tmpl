@@ -13,12 +13,12 @@ EDITOR='nvim'
 
 # Oh My ZSH stuff
 export ZSH="$HOME/.oh-my-zsh"
-{{ if eq .chezmoi.hostname "solid-study" }}
+{{- if eq .chezmoi.hostname "solid-study" }}
 ZSH_THEME="robbyrussell"
-{{ else if eq .chezmoi.hostname "greasy-gold" }}
+{{- else if eq .chezmoi.hostname "greasy-gold" }}
 ZSH_THEME="xxf"
-{{ else }}
+{{- else }}
 ZSH_THEME="robbyrussell"
-{{ end}}
+{{- end}}
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
