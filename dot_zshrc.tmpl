@@ -22,3 +22,6 @@ ZSH_THEME="robbyrussell"
 {{- end}}
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
+{{- if stat (joinPath .chezmoi.homeDir ".asdf") }}
+. $HOME/.asdf/asdf.sh
+{{- end}}
