@@ -1,6 +1,7 @@
 # dotfiles
 
 `sh -c "$(curl -fsLS get.chezmoi.io)" -- init shaungarwood`
+
 `chezmoi apply`
 
 ## This is the main command you run
@@ -9,6 +10,7 @@ See what changes chezmoi WOULD make
 
 
 ## Example
+```
 ➜  ~ echo "hello" > .blahrc
 cm diff
 cm add .blahrc
@@ -26,8 +28,7 @@ index 97531f3ba85f8e73481ecbaa4ec51b714f4c28a9..ce013625030ba8dba906f756967f9e9c
 @@ -1,2 +1 @@
  hello
 -hello2
-
-
+```
 
 
 ## The rest of the commands
