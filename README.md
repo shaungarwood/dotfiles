@@ -1,6 +1,7 @@
 # dotfiles
 
-`sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply shaungarwood`
+`sh -c "$(curl -fsLS get.chezmoi.io)" -- init shaungarwood`
+`chezmoi apply`
 
 ## This is the main command you run
 `cm diff`
