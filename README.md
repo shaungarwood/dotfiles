@@ -37,7 +37,7 @@ Seem like maybe it'll warn you about changes before they happen.
 `cm cd`
 Probably just do this for most everything. Then run git commands.
 
-`cm pull`
+`cm cd && git pull`
 I think this will pull GH repo changes.
 
 I don't wannt do `cm update -v` to pull and apply in one fowl swoop.
