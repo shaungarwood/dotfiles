@@ -2,7 +2,8 @@
 
 `sh -c "$(curl -fsLS get.chezmoi.io)" -- init shaungarwood`
 
-`chezmoi apply`
+`chezmoi apply --interactive`
+"apply" will automatically overwrite if the file hasn't been touched before
 ^ will warn you before overwriting
 
 ## This is the main command you run

@@ -22,7 +22,7 @@ ZSH_THEME="xxf"
 ZSH_THEME="afowler"
 {{- else }}
 ZSH_THEME="robbyrussell"
-{{- end}}
+{{- end }}
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
 {{- if stat (joinPath .chezmoi.homeDir ".asdf") }}

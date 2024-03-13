@@ -2,14 +2,8 @@
 bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "xclip -i -f -selection primary | xclip -i -selection clipboard"
 bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -selection clipboard -i"
 
-# i think i need this, vim is acting funny
-set escape-time 100
-
 # default is 2,000
 set-option -g history-limit 3000
-
-# need this for vim-airline to display correctly
-set -g default-terminal screen-256color
 
 # vim navigation controls for buffer
 set-window-option -g mode-keys vi
@@ -23,8 +17,6 @@ bind-key C-a send-prefix
 bind s split-window -v -c "#{pane_current_path}"
 # use <prefix> v for vertical split
 bind v split-window -h -c "#{pane_current_path}"
-# unbind '"'
-# unbind %
 
 # reload config file (change file location to your the tmux.conf you want to use)
 bind r source-file ~/.tmux.conf
@@ -56,12 +48,10 @@ setw -g pane-base-index 1
 # move status bar to top
 set-option -g status-position top
 
-# ansible additions
-# ----- BEGIN powerline settings -----
-# enable the powerline status bar
+{{ if or (has .chezmoi.hostname .hostnames.work) (has .chezmoi.hostname .hostnames.personal) }}
+# start powerline
 run-shell 'powerline-config tmux setup'
-# ----- END powerline settings -----
-
+{{- end }}
 
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
