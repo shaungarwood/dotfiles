@@ -6,6 +6,7 @@ alias cm="chezmoi -v"
 alias delete_older_than_3_days="find . -mtime +3 -delete"
 alias dc=docker-compose
 alias fuck='sudo $(history -p \!\!)'
+alias g='git'
 extract () {
    if [ -f $1 ] ; then
        case $1 in
