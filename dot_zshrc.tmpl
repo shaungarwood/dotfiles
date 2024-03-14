@@ -12,6 +12,19 @@ source "$HOME/.aliases"
 EDITOR='nvim'
 GIT_EDITOR='nvim'
 
+{{- if has .chezmoi.hostname .hostnames.work }}
+# Work stuff
+export JAVA_HOME='/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home'
+path+=("$HOME/Library/Python/3.9/bin")
+path+=("$HOME/go/bin")
+
+export ANDROID_HOME=$HOME/Library/Android/sdk
+path+=("$ANDROID_HOME/emulator")
+path+=("$ANDROID_HOME/platform-tools")
+
+export GPG_TTY=$(tty)
+{{- end }}
+
 # Oh My ZSH stuff
 export ZSH="$HOME/.oh-my-zsh"
 {{- if has .chezmoi.hostname .hostnames.personal }}
@@ -25,8 +38,8 @@ ZSH_THEME="robbyrussell"
 {{- end }}
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
-{{- if stat (joinPath .chezmoi.homeDir ".asdf") }}
+{{- if stat (joinPath .chezmoi.homeDir ".asdf/asdf.sh") }}
 . $HOME/.asdf/asdf.sh
-{{- else if stat (joinPath "$HOMEBREW_PREFIX" "opt/asdf/libexec/asdf.sh") }}
+{{- else if stat "/opt/homebrew/opt/asdf/libexec/asdf.sh" }}
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 {{- end}}
