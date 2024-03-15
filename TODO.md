@@ -44,6 +44,7 @@ once?
  - asdf
  - tmux
  - nvim
+ - lazygit
  - joplin???
  - tldr
  - packages from my_bootstrap
