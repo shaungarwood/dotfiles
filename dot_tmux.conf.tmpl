@@ -8,12 +8,12 @@ set-option -g history-limit 3000
 # vim navigation controls for buffer
 set-window-option -g mode-keys vi
 
-{{ if or (has .chezmoi.hostname .hostnames.work) (has .chezmoi.hostname .hostnames.personal) }}
+  {{ if or (has .chezmoi.hostname .hostnames.work) (has .chezmoi.hostname .hostnames.personal) }}
 # remap prefix from 'C-b' to 'C-a'
 unbind C-b
 set-option -g prefix C-a
 bind-key C-a send-prefix
-{{- end }}
+  {{- end }}
 
 # use <prefix> s for horizontal split
 bind s split-window -v -c "#{pane_current_path}"
@@ -50,10 +50,10 @@ setw -g pane-base-index 1
 # move status bar to top
 set-option -g status-position top
 
-{{ if or (has .chezmoi.hostname .hostnames.work) (has .chezmoi.hostname .hostnames.personal) }}
+  {{ if or (has .chezmoi.hostname .hostnames.work) (has .chezmoi.hostname .hostnames.personal) }}
 # start powerline
 run-shell 'powerline-config tmux setup'
-{{- end }}
+  {{- end }}
 
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
