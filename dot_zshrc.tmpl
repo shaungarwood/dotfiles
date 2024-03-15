@@ -28,7 +28,7 @@ export GPG_TTY=$(tty)
 # Oh My ZSH stuff
 export ZSH="$HOME/.oh-my-zsh"
   {{- if has .chezmoi.hostname .hostnames.personal }}
-ZSH_THEME="robbyrussell"
+ZSH_THEME="kardan"
   {{- else if has .chezmoi.hostname .hostnames.personal_remote }}
 ZSH_THEME="xxf"
   {{- else if has .chezmoi.hostname .hostnames.work }}
