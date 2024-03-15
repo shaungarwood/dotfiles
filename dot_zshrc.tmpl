@@ -39,7 +39,7 @@ ZSH_THEME="robbyrussell"
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
   {{- if stat (joinPath .chezmoi.homeDir ".asdf/asdf.sh") }}
-. $HOME/.asdf/asdf.sh
+source $HOME/.asdf/asdf.sh
   {{- else if stat "/opt/homebrew/opt/asdf/libexec/asdf.sh" }}
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
+source /opt/homebrew/opt/asdf/libexec/asdf.sh
   {{- end}}
