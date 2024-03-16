@@ -1,8 +1,7 @@
 # dotfiles
 
-`sh -c "$(curl -fsLS get.chezmoi.io)" -- init shaungarwood`
+`sh -c "$(curl -fsLS get.chezmoi.io)" -- init --interactive shaungarwood`
 
-`chezmoi apply --interactive`
 "apply" will automatically overwrite if the file hasn't been touched before
 ^ will warn you before overwriting
 
