@@ -17,6 +17,7 @@ once?
  - tmux
  - nvim
  - joplin???
+ - tldr
  - packages from my_bootstrap
    - wget
    - jq
