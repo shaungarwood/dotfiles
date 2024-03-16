@@ -8,6 +8,5 @@ See what changes chezmoi WOULD make
 
 ## The rest of the commands
 `chezmoi cd && git pull`
-I think this will pull GH repo changes.
 
 I don't wannt do `cm update -v` to pull and apply in one fowl swoop.
