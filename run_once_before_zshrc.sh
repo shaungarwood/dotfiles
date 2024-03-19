@@ -2,7 +2,8 @@
 # This script is run once before zshrc is sourced
 
 sudo apt-get update
-sudo apt-get install -y zsh curl git gpg
+sudo apt-get install -y curl git gpg gcc make zlib1g-dev zlibc libffi-dev libssl-dev libyaml-dev libbz2-dev libreadline-dev libsqlite3-dev liblzma-dev
+sudo apt-get install -y zsh
 
 # Set zsh as the default shell
 chsh -s $(which zsh)
@@ -21,6 +22,6 @@ asdf plugin add ruby
 asdf install ruby latest
 asdf global ruby latest
 
-adsf plugin add python
+asdf plugin add python
 asdf install python latest
 asdf global python latest
