@@ -1,5 +1,33 @@
 # TODO
 
+zsh
+  zsh?
+  tmux
+  nvim
+  oh-my-zsh
+  gpg
+  asdf
+
+alias
+  docker
+  docker-compose
+  git
+  tar
+  bunzip2
+  unrar
+  unzip
+  uncompress
+  7z
+  joplin
+  mimproxy
+  veracrypt
+  add lg => lazygit
+
+run_once_before_zshrc
+run_once_before_alias
+
+libffi7
+
 files to add:
  1. gitconfig
  2. nvim (git clone for now)

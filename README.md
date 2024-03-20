@@ -1,6 +1,6 @@
 # dotfiles
 
-`sh -c "$(curl -fsLS get.chezmoi.io)" -- init --interactive shaungarwood`
+`sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply --interactive shaungarwood`
 
 ## This is the main command you run
 `chezmoi diff`
