@@ -4,6 +4,8 @@ zsh
   zsh?
   tmux
   nvim
+    fzf
+    ripgrep
   oh-my-zsh
   gpg
   asdf
