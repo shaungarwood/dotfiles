@@ -31,11 +31,14 @@ run_once_before_alias
 libffi7
 
 files to add:
- 1. gitconfig
+ 1. gitconfig (make sure vim editor is set)
  2. nvim (git clone for now)
  3. asdf
  4. ruby
  5. python
+   yt-dlp
+ 6. nodejs
+   joplin
  6. default packages
  7. work dot_aliases
  8. nice pryrc?
