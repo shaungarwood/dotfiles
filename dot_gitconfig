@@ -1,0 +1,32 @@
+[user]
+        email = shaun.garwood@gmail.com
+        name = Shaun Garwood
+[alias]
+        co = checkout
+        cleanup = "!f(){\
+                git co main && git pull &&\
+                printf 'branches merged you can probably delete (git branch -d):\n' &&\
+                git branch --merged &&\
+                printf 'unmerged branches, do you still need? (git branch -D):\n' &&\
+                git branch --no-merged;\
+                };f"
+        ls = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cgreen\\ [%cn]" --decorate --date=relative
+        wu = "!f(){\
+    git branch &&\
+    printf '%s\n' -------------------- &&\
+    git status &&\
+    printf '%s\n' -------------------- &&\
+    git ls -n 10;\
+    };f"
+        doit = "commit -am"
+        branch = "checkout -b"
+        tree = "log --graph --oneline --all"
+[color]
+        ui = true
+[pager]
+        ls = false
+        branch = false
+[push]
+	default = simple
+[init]
+	defaultBranch = main
