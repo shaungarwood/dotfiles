@@ -29,6 +29,7 @@ extract () {
 }
 alias jp="joplin"
 alias largest-dir="du -sx ./* 2>/dev/null | sort -n"
+alias lg="lazygit"
 alias ll="ls -lht --color"
 alias lla="ls -laht --color"
 alias new-vim="nvim -u ~/.config/nvim/init-new.lua"
@@ -42,6 +43,7 @@ alias ssh-proxy="ssh -v -4 -D 52804 -N"
 alias sudo='sudo -p "Ah ah ah, didnt say the magic word: "'
 alias v='vim'
 alias vc="veracrypt -t -k '' --pim=0 --protect-hidden=no"
+alias vg="vagrant"
 # ----- BEGIN -----
 alias vim=nvim
 # ----- END -----
