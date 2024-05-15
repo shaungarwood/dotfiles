@@ -42,6 +42,7 @@ alias plex="chromium --app=https://app.plex.tv/desktop"
 alias p='ping -s -v'
 alias ssh-proxy="ssh -v -4 -D 52804 -N"
 alias sudo='sudo -p "Ah ah ah, didnt say the magic word: "'
+alias tree-all="tree -a -I '.git|logs'"
 alias v='vim'
 alias vc="veracrypt -t -k '' --pim=0 --protect-hidden=no"
 alias vg="vagrant"
