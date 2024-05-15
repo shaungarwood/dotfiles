@@ -1,6 +1,3 @@
-[user]
-        email = shaun.garwood@gmail.com
-        name = Shaun Garwood
 [alias]
         co = checkout
         cleanup = "!f(){\
@@ -36,3 +33,9 @@
 	editor = nvim
 [credential]
 	helper = store
+[include]
+  {{- if has .chezmoi.hostname .hostnames.work }}
+  path = ~/.gitconfig.work
+  {{- else }}
+  path = ~/.gitconfig.personal
+  {{- end }}
