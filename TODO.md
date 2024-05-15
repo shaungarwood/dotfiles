@@ -28,10 +28,6 @@ alias
 nvim
   sudo add-apt-repository ppa:neovim-ppa/unstable -y
 
-joplin
-  NPM_CONFIG_PREFIX=~/.joplin-bin npm install -g joplin
-  sudo ln -s ~/.joplin-bin/bin/joplin /usr/bin/joplin
-
 run_once_before_zshrc
 run_once_before_alias
 
