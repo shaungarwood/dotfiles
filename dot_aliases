@@ -35,6 +35,7 @@ alias lla="ls -laht --color"
 alias new-vim="nvim -u ~/.config/nvim/init-new.lua"
 alias mitm='mitmproxy --set console_focus_follow=true --set ssl_insecure=true --view-filter '\''!~a'\'
 alias netflix="chromium --app=https://netflix.com"
+alias notes="cd ~/repos/notes && NVIM_APPNAME=nvim-notes nvim README.md"
 alias nm-restart="sudo service NetworkManager restart"
 alias o="open"
 alias plex="chromium --app=https://app.plex.tv/desktop"
