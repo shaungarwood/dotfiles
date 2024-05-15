@@ -9,19 +9,11 @@ path+=("$HOME/bin")
 source "$HOME/.aliases"
 
 # Defaults
-EDITOR='nvim'
+export EDITOR='nvim'
 
   {{- if has .chezmoi.hostname .hostnames.work }}
 # Work stuff
-export JAVA_HOME='/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home'
-path+=("$HOME/Library/Python/3.9/bin")
-path+=("$HOME/go/bin")
-
-export ANDROID_HOME=$HOME/Library/Android/sdk
-path+=("$ANDROID_HOME/emulator")
-path+=("$ANDROID_HOME/platform-tools")
-
-export GPG_TTY=$(tty)
+source ~/.dev_setup_rc
   {{- end }}
 
 # Oh My ZSH stuff
