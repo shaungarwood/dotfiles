@@ -50,6 +50,9 @@ alias lg="lazygit"
 alias ll="ls -lht --color"
 alias lla="ls -laht --color"
 alias mitm='mitmproxy --set console_focus_follow=true --set ssl_insecure=true --view-filter '\''!~a'\'
+function my-rg() {
+    rg $1 -g "!{/log,/public}" --no-follow ./
+}
 alias notes="cd ~/repos/notes && nvim-notes README.md"
 alias o="open"
 alias p='ping -s -v'
