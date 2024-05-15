@@ -1,6 +1,24 @@
+  {{- if has .chezmoi.hostname .hostnames.work }}
+# work stuff
 alias brails="bundle exec rails"
 alias bserver="bundle exec rails server"
+alias brspec="bundle exec rspec"
 alias brubocop="bundle exec rubocop"
+alias ccc="cocam console"
+alias drake="dip rake"
+alias drspec="dip rspec"
+  {{- end }}
+
+  {{- if has .chezmoi.hostname .hostnames.personal }}
+# personal laptop stuff
+alias netflix="chromium --app=https://netflix.com"
+alias nm-restart="sudo service NetworkManager restart"
+alias plex="chromium --app=https://app.plex.tv/desktop"
+alias vc="veracrypt -t -k '' --pim=0 --protect-hidden=no"
+alias vg="vagrant"
+  {{- end }}
+
+# universal stuff
 alias c=clear
 alias cm="chezmoi -v"
 alias delete_older_than_3_days="find . -mtime +3 -delete"
@@ -27,31 +45,17 @@ extract () {
        echo "'$1' is not a valid file!"
    fi
 }
-alias jp="joplin"
 alias largest-dir="du -sx ./* 2>/dev/null | sort -n"
 alias lg="lazygit"
 alias ll="ls -lht --color"
 alias lla="ls -laht --color"
-alias new-vim="nvim -u ~/.config/nvim/init-new.lua"
 alias mitm='mitmproxy --set console_focus_follow=true --set ssl_insecure=true --view-filter '\''!~a'\'
-alias netflix="chromium --app=https://netflix.com"
-alias notes="cd ~/repos/notes && NVIM_APPNAME=nvim-notes nvim README.md"
-alias nm-restart="sudo service NetworkManager restart"
+alias notes="cd ~/repos/notes && nvim-notes README.md"
 alias o="open"
-alias plex="chromium --app=https://app.plex.tv/desktop"
 alias p='ping -s -v'
 alias ssh-proxy="ssh -v -4 -D 52804 -N"
 alias sudo='sudo -p "Ah ah ah, didnt say the magic word: "'
 alias tree-all="tree -a -I '.git|logs'"
-alias v='vim'
-alias vc="veracrypt -t -k '' --pim=0 --protect-hidden=no"
-alias vg="vagrant"
-# ----- BEGIN -----
+alias v=nvim
 alias vim=nvim
-# ----- END -----
-
-# rails
-alias r='bin/rails'
-alias rc='bin/rails console'
-alias brspec='bundle exec rspec'
-alias brubocop='bundle exec rubocop'
+alias vim-notes="NVIM_APPNAME=nvim-notes nvim"
