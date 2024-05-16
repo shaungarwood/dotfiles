@@ -53,7 +53,7 @@ alias mitm='mitmproxy --set console_focus_follow=true --set ssl_insecure=true --
 function my-rg() {
     rg $1 -g "!{/log,/public}" --no-follow ./
 }
-alias notes="cd ~/repos/notes && nvim-notes README.md"
+alias notes="cd ~/repos/notes && vim-notes README.md"
 alias o="open"
 alias p='ping -s -v'
 alias ssh-proxy="ssh -v -4 -D 52804 -N"
