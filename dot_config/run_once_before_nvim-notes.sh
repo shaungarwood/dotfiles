@@ -1,7 +1,7 @@
 #!/bin/bash
 
 REPO_URL="https://github.com/CompanyCam/shaun-garwood-notes.git"
-DIR="$HOME/repo/notes"
+DIR="$HOME/repos/notes"
 
 if [ ! -d "$DIR" ]; then
   mkdir -p "$DIR"
