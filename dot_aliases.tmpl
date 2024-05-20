@@ -53,7 +53,7 @@ alias mitm='mitmproxy --set console_focus_follow=true --set ssl_insecure=true --
 function my-rg() {
     rg $1 -g "!{/log,/public}" --no-follow ./
 }
-alias notes="cd ~/repos/notes && vim-notes README.md"
+alias notes="NVIM_APPNAME=nvim-notes nvim"
 alias o="open"
 alias p='ping -s -v'
 alias ssh-proxy="ssh -v -4 -D 52804 -N"
@@ -61,4 +61,3 @@ alias sudo='sudo -p "Ah ah ah, didnt say the magic word: "'
 alias tree-all="tree -a -I '.git|logs'"
 alias v=nvim
 alias vim=nvim
-alias vim-notes="NVIM_APPNAME=nvim-notes nvim"
