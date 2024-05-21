@@ -1,6 +1,10 @@
 #!/bin/bash
 
+{{- if has .chezmoi.hostname .hostnames.work }}
 REPO_URL="https://github.com/CompanyCam/shaun-garwood-notes.git"
+{{- else }}
+REPO_URL="https://github.com/shaungarwood/notes.git"
+{{- end }}
 DIR="$HOME/repos/notes"
 
 if [ ! -d "$DIR" ]; then
