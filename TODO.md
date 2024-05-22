@@ -1,5 +1,8 @@
 # TODO
 
+
+! get a light theme for nvim! and an alias to switch between them
+
 zsh
   zsh?
   tmux
