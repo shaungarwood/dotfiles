@@ -57,11 +57,6 @@ setw -g pane-base-index 1
 # move status bar to top
 set-option -g status-position top
 
-  {{ if or (has .chezmoi.hostname .hostnames.work) (has .chezmoi.hostname .hostnames.personal) }}
-# start powerline
-run-shell 'powerline-config tmux setup'
-  {{- end }}
-
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
 
@@ -89,3 +84,12 @@ bind-key -T copy-mode-vi 'C-k' select-pane -U
 bind-key -T copy-mode-vi 'C-l' select-pane -R
 bind-key -T copy-mode-vi 'C-\' select-pane -l
 bind-key -T copy-mode-vi 'C-Space' select-pane -t:.+
+
+  {{ if or (has .chezmoi.hostname .hostnames.work) (has .chezmoi.hostname .hostnames.personal) }}
+# bind-key -I will install plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'erikw/tmux-powerline'
+
+run '~/.config/tmux/plugins/tpm/tpm'
+  {{- end }}
