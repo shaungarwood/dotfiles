@@ -6,6 +6,10 @@
 `chezmoi diff`
 See what changes chezmoi WOULD make
 
+`chezmoi apply -v`
+Applies the changes and tells you about it 
+
+
 ## The rest of the commands
 `chezmoi cd && git pull`
 
