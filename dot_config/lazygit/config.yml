@@ -1,0 +1,13 @@
+gui:
+  mouseEvents: false
+  language: en
+  nerdFontsVersion: "3"
+  showFileIcons: true
+  fetchInterval: 60
+
+notARepository: skip
+
+keybinding:
+  commits:
+    moveDownCommit: <pgdown>
+    moveUpCommit: <pgup>
