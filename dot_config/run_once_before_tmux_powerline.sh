@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
-# This script is run once before tmux.conf is sourced.
 
 OS=$(uname)
 
 case $OS in
-  "Darwin")
-    # Mac specific commands here
-    echo "Running on Mac"
-    brew install tmux
+  "Darwin") # Mac
+    brew install \
+      bc\
+      curl\
+      grep\
+      jq
     ;;
 
   "Linux")
-    # Linux specific commands here
-    echo "Running on Linux"
     sudo apt-get update
-    sudo apt-get install -y tmux
+    sudo apt-get install -y \
+      bc\
+      curl\
+      grep\
+      jq
     ;;
 esac
 
