@@ -3,7 +3,7 @@
 OS=$(uname)
 
 case $OS in
-  "Darwin") # Mac
+  "Darwin")
     brew install \
       bc\
       curl\

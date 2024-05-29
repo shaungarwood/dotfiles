@@ -1,38 +1,9 @@
 # TODO
 
-
 ! get a light theme for nvim! and an alias to switch between them
-
-zsh
-  zsh?
-  tmux
-  nvim
-    fzf
-    ripgrep
-  oh-my-zsh
-  gpg
-  asdf
-
-alias
-  docker
-  docker-compose
-  git
-  tar
-  bunzip2
-  unrar
-  unzip
-  uncompress
-  7z
-  joplin
-  mimproxy
-  veracrypt
-  add lg => lazygit
 
 nvim
   sudo add-apt-repository ppa:neovim-ppa/unstable -y
-
-run_once_before_zshrc
-run_once_before_alias
 
 libffi7
 
