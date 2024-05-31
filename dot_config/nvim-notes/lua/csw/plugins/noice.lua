@@ -3,6 +3,16 @@ return {
   enabled = true,
   event = "VeryLazy",
   opts = {
+    routes = {
+      {
+        filter = {
+          event = "msg_show",
+          kind = "",
+          find = "written",
+        },
+        opts = { skip = true },
+      },
+    },
     -- add any options here
   lsp = {
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
