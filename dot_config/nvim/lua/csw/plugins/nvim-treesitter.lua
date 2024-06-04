@@ -27,6 +27,7 @@ return {
           "bash",
           "css",
           "dockerfile",
+          "diff",
           "git_config",
           "gitignore",
           "graphql",
