@@ -1,5 +1,10 @@
 # TODO
 
+check out mise
+https://mise.jdx.dev/getting-started.html
+how much faster/easier is it?
+there's a comparison section for mise vs asdf.
+
 ! get a light theme for nvim! and an alias to switch between them
 
 nvim
