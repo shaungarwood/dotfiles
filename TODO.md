@@ -24,10 +24,19 @@ nvim
 may be able to switch this to brew or mise
 
 
+## tmux
+different colors for different systems
+
+
 ## ssh
 add .ssh/config
 how to differenciate the different local environments?
 maybe just full on different files
+
+
+## pry
+can i use a default on in my home dir?
+will it override the one in the project?
 
 
 ## random packages
