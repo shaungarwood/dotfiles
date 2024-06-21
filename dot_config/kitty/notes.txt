@@ -1,0 +1,9 @@
+https://github.com/search?q=kitty_mod++path%3A**%2Fkitty.conf&type=code&ref=advsearch
+
+https://github.com/mikesmithgh/kitty-scrollback.nvim
+
+https://github.com/knubie/vim-kitty-navigator#custom-key-bindings
+^ this is the one the site references, current trying to get working
+
+https://github.com/MunsMan/kitty-navigator.nvim
+^ this is the one i think i should use
