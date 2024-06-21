@@ -1,5 +1,7 @@
 # To-Do
 
+add "betterjk"
+
 1. run a LUA linter
 2. vim-rails? gf?
 3. ruby-lsp does not seem to map properly
