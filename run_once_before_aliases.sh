@@ -17,7 +17,8 @@ if [[ $SHELL != *"zsh"* ]]; then
         ripgrep \
         shred \ # unclear if this works
         htop \
-        visidata
+        visidata \
+        pass
       ;;
   esac
 fi
