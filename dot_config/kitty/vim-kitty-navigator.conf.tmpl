@@ -4,4 +4,8 @@ map ctrl+h kitten pass_keys.py left   ctrl+h
 map ctrl+l kitten pass_keys.py right  ctrl+l
 
 allow_remote_control yes
+ {{ if eq .chezmoi.os "linux" }}
 listen_on unix:@mykitty
+  {{ else if eq .chezmoi.os "darwin" }}
+listen_on unix:/tmp/mykitty
+  {{end}}
