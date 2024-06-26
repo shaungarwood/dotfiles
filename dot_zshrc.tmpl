@@ -1,5 +1,5 @@
 # TMUX stuff
-if [ "$TMUX" = "" ]; then tmux; fi
+# if [ "$TMUX" = "" ]; then tmux; fi
 
 # General ZSH stuff
 HISTFILE=~/.histfile
@@ -34,3 +34,8 @@ source $HOME/.asdf/asdf.sh
   {{- else if stat "/opt/homebrew/opt/asdf/libexec/asdf.sh" }}
 source /opt/homebrew/opt/asdf/libexec/asdf.sh
   {{- end}}
+
+
+ {{ if eq .chezmoi.os "linux" }}
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  {{end}}
