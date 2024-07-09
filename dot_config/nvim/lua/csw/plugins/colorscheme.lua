@@ -5,6 +5,8 @@ return {
     config = function()
       -- load the colorscheme here
       vim.cmd([[colorscheme nightfly]])
+      vim.cmd([[command! Lighttheme set background=light]])
+      vim.cmd([[command! Darktheme set background=dark]])
     end,
   }
 }
