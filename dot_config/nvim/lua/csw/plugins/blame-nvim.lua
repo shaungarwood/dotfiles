@@ -1,1 +1,6 @@
-return { 'FabijanZulj/blame.nvim' }
+return {
+  "FabijanZulj/blame.nvim",
+  config = function()
+    require("blame").setup()
+  end
+}
