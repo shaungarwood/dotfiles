@@ -14,10 +14,6 @@ return {
     -- Lazygit
     new_floaterm('<leader>lg', 'lazygit')
 
-    -- Rspec
-    local filename = vim.fn.expand('%:p')
-    new_floaterm('<leader>rs', 'rspec ' .. filename, true)
-
     -- Just a generic terminal
     new_floaterm('<leader>tn')
   end,
