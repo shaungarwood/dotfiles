@@ -9,8 +9,11 @@ font_size 12
 map ctrl+equal  change_font_size all +2.0
 map ctrl+minus  change_font_size all -2.0
 
+# Window
 window_margin_width 3
+window_border_width 2pt
 
+# Background
 background_image ./wallpapers/dark-dunes.png
 background_image_layout scaled
   {{- if has .chezmoi.hostname .hostnames.work }}
@@ -20,7 +23,8 @@ background_tint 0.69
   {{- end }}
 background_tint_gaps -10.0
 
-window_border_width 2pt
+# Cursor
+cursor_trail 1
 
 # Tab bar
 tab_bar_style powerline
