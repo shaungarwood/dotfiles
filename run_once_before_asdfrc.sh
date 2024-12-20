@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# Install dependencies for Linux
+# I'm guessing Mac already has what it needs
+if [[ $(uname) == "Linux" ]]; then
+  sudo apt-get update
+  sudo apt-get install -y gcc make zlib1g-dev libssl-dev libffi-dev
+fi
+
 # Install asdf
 if ! command -v asdf >/dev/null; then
   git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
