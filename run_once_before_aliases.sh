@@ -13,7 +13,7 @@ if [[ $SHELL != *"zsh"* ]]; then
 
     "Linux")
       sudo apt-get update
-      sudo apt-get install -y \
+      sudo apt-get install -y --ignore-missing \
         ripgrep \
         shred \
         htop \
