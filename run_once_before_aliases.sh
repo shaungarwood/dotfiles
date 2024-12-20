@@ -13,12 +13,15 @@ if [[ $SHELL != *"zsh"* ]]; then
 
     "Linux")
       sudo apt-get update
-      sudo apt-get install -y \
-        ripgrep \
-        shred \ # unclear if this works
-        htop \
-        visidata \
-        pass
+      packages=("ripgrep" "shred" "htop" "visidata" "pass")
+      for pkg in "${packages[@]}"; do
+        echo "Installing $pkg..."
+        # We have do this silly thing because there is NO way to continue the script if a package fails to install
+        sudo apt-get install -y "$pkg" || {
+          echo "Warning: $pkg could not be installed. Continuing..."
+        }
+      done
+      echo "All installations attempted. Continuing with the script..."
       ;;
   esac
 fi
