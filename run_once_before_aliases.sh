@@ -15,7 +15,7 @@ if [[ $SHELL != *"zsh"* ]]; then
       sudo apt-get update
       sudo apt-get install -y \
         ripgrep \
-        shred \ # unclear if this works
+        shred \
         htop \
         visidata \
         pass
