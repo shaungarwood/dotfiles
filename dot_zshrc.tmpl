@@ -36,6 +36,6 @@ source /opt/homebrew/opt/asdf/libexec/asdf.sh
   {{- end}}
 
 
- {{ if eq .chezmoi.os "linux" }}
+  {{ if stat "/home/linuxbrew/.linuxbrew/bin/brew" }}
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   {{end}}
