@@ -32,7 +32,11 @@
 [core]
 	editor = nvim
 [credential]
+  {{ if eq .chezmoi.os "darwin" }}
 	helper = osxkeychain
+  {{ else }}
+  helper = store
+  {{ end }}
 [include]
   {{- if has .chezmoi.hostname .hostnames.work }}
   path = ~/.gitconfig.work
