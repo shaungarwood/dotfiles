@@ -6,7 +6,8 @@ if [[ $SHELL != *"zsh"* ]]; then
 
   case $OS in
     "Darwin")
-      # Pretty sure this is already installed on Mac
+      # Pretty sure zsh is already installed on Mac
+      brew install zsh zsh-syntax-highlighting
       ;;
 
     "Linux")
@@ -25,7 +26,7 @@ if [[ $SHELL != *"zsh"* ]]; then
         libreadline-dev \
         libsqlite3-dev \
         liblzma-dev
-      sudo apt-get install -y zsh
+      sudo apt-get install -y zsh zsh-syntax-highlighting
       ;;
   esac
 
