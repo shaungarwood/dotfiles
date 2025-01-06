@@ -17,3 +17,4 @@ keybind = ctrl+l=goto_split:right
 # scrollback
 keybind = ctrl+a>[=text:~/bin/my_scrollback.sh\n
 keybind = shift+ctrl+;=write_screen_file:paste
+keybind = ctrl+a>]=paste_from_clipboard
