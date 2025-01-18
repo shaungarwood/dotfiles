@@ -36,7 +36,11 @@ source $HOME/.asdf/asdf.sh
 source /opt/homebrew/opt/asdf/libexec/asdf.sh
   {{- end}}
 
+  {{- if eq .chezmoi.os "darwin" }}
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  {{- else if eq .chezmoi.os "linux" }}
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  {{- end }}
 
   {{ if stat "/home/linuxbrew/.linuxbrew/bin/brew" }}
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
