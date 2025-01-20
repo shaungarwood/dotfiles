@@ -93,6 +93,11 @@ case $OS in
     sudo apt-get update
     sudo apt-get install -y sway rofi swaybg swaylock # waybar
 
+    # you may have to go tell /etc/greetd/config.toml to use sway
+    sudo apt-get install -y greetd wlgreet
+    sudo systemctl disable gdm
+    sudo systemctl enable greetd
+
     # grimshot is screenshot tool
     sudo apt-get install -y grimshot
 
