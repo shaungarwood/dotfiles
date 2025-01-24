@@ -26,7 +26,7 @@ install_and_configure_gammastep() {
     # Variables
     SERVICE_FILE="$HOME/.config/systemd/user/gammastep.service"
     CONFIG_DIR="$HOME/.config/gammastep"
-    CONFIG_FILE="$CONFIG_DIR/config"
+    CONFIG_FILE="$CONFIG_DIR/config.ini"
     EXEC_PATH=$(command -v gammastep)
 
     # Create the gammastep config directory if it doesn't exist
@@ -38,6 +38,10 @@ install_and_configure_gammastep() {
     # Create a default config file if it doesn't exist
     if [[ ! -f "$CONFIG_FILE" ]]; then
         cat << EOF > "$CONFIG_FILE"
+[general]
+temp-night=3500
+location-provider=manual
+
 [manual]
 lat=39.7
 lon=-104.9
