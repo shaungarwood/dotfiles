@@ -2,6 +2,9 @@
 #
 # Logo key. Use Mod1 for Alt.
 set $mod Mod1
+
+set $default_layout tabbed
+
 # Home row direction keys, like vim
 set $left h
 set $down j
