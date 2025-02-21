@@ -1,5 +1,9 @@
 # TODO
 
+ - added waybar, but don't have a script to install it yet
+ - a bunch of the linux stuff is installing on my mac
+
+
 ## kitty
 ubuntu - apt, not brew
 
