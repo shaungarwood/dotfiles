@@ -42,6 +42,7 @@ return {
           "regex",
           "json",
           "sql",
+          "terraform",
           "vim",
           "vimdoc",
           "yaml",
