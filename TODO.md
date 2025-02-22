@@ -1,5 +1,7 @@
 # TODO
 
+- adding this to get git working on phone
+
  - added waybar, but don't have a script to install it yet
  - a bunch of the linux stuff is installing on my mac
 
