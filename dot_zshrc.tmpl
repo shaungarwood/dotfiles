@@ -14,6 +14,7 @@ export TERM='xterm-256color'
 
   {{- if has .chezmoi.hostname .hostnames.work }}
 # Work stuff
+eval "$(rbenv init -)" # cocam isn't too smart
 source ~/.dev_setup_rc
   {{- end }}
 
@@ -30,6 +31,7 @@ ZSH_THEME="robbyrussell"
   {{- end }}
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
+autoload -U +X bashcompinit && bashcompinit # autocomplete and syntax highlighting
   {{- if stat (joinPath .chezmoi.homeDir ".asdf/asdf.sh") }}
 source $HOME/.asdf/asdf.sh
   {{- else if stat "/opt/homebrew/opt/asdf/libexec/asdf.sh" }}

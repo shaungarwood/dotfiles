@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ $(uname) == "Darwin" ]]; then
+  echo "Exiting because this script is not meant to be run on MacOS"
+  exit 0
+fi
+
 # Install dependencies for Linux
 # I'm guessing Mac already has what it needs
 if [[ $(uname) == "Linux" ]]; then
