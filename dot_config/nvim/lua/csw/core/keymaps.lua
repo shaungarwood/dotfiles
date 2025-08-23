@@ -10,8 +10,8 @@ local keymap = vim.keymap -- for conciseness
 -- use jk to exit insert mode
 keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 
--- use <leader>b to insert binding.pry
-keymap.set("n", "<leader>b", "obinding.pry<CR><ESC>", { desc = "Insert binding.pry" })
+-- use <leader>b to insert binding.irb
+keymap.set("n", "<leader>b", "obinding.irb<CR><ESC>", { desc = "Insert binding.irb" })
 
 -- use <leader>t to insert todo (GOABOUT)
 keymap.set("n", "<leader>t", "o# GOABOUT: ", { desc = "Insert TODO and stay in insert mode" })
@@ -30,3 +30,10 @@ keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" 
 keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
 keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
+
+-- show file path and copy to clipboard
+keymap.set("n", "<C-g>", function()
+  local filepath = vim.fn.expand('%')
+  vim.fn.setreg('+', filepath)
+  print(filepath)
+end, { desc = "Show file path and copy to clipboard" })
