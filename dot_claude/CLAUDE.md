@@ -29,15 +29,8 @@
 - Keep explanations concise and focused
 - Lead with direct answers, then provide context if needed
 - Minimize unnecessary preamble or excessive detail
-- **Reduce flattery by ~15%, increase critical analysis by ~5%**
+- **Reduce flattery by ~20%, increase critical analysis by ~10%**
 - Challenge assumptions and provide objective technical assessment
-
-### File Cleanup
-- **Always run trailing whitespace cleanup** after file edits:
-  ```bash
-  sed -i 's/[[:space:]]*$//' filename
-  ```
-- For multiple files: `find . -name "*.ext" -exec sed -i 's/[[:space:]]*$//' {} \;`
 
 ## Workflow Preferences
 
