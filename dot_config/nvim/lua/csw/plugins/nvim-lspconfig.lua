@@ -33,10 +33,8 @@ end
 return {
   "neovim/nvim-lspconfig",
   config = function()
-    -- Setup language servers.
-    local lspconfig = require('lspconfig')
-
-    lspconfig.ruby_lsp.setup({
+    -- Setup language servers using new vim.lsp.config API (nvim 0.11+)
+    vim.lsp.config('ruby_lsp', {
       on_attach = function(client, buffer)
         print("LSP started.");
 
@@ -46,5 +44,8 @@ return {
         setup_diagnostics(client, buffer)
       end
     })
+
+    -- Enable the LSP server
+    vim.lsp.enable('ruby_lsp')
   end
 }

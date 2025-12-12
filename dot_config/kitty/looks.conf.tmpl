@@ -6,8 +6,10 @@ font_size 14
   {{- else }}
 font_size 10
   {{- end }}
-map ctrl+equal  change_font_size all +2.0
-map ctrl+minus  change_font_size all -2.0
+map ctrl+equal  change_font_size current +2.0
+map ctrl+minus  change_font_size current -2.0
+map ctrl+shift+equal  change_font_size all +2.0
+map ctrl+shift+minus  change_font_size all -2.0
 
 # Window
 window_margin_width 3

@@ -1,6 +1,9 @@
 # TMUX stuff
 # if [ "$TMUX" = "" ]; then tmux; fi
 
+autoload -Uz compinit
+compinit
+
 # General ZSH stuff
 HISTFILE=~/.histfile
 HISTSIZE=10000
@@ -16,7 +19,6 @@ export TERM='xterm-256color'
 # Work stuff
 eval "$(rbenv init -)" # cocam isn't too smart
 source ~/.dev_setup_rc
-cd ~/repos/Company-Cam-API/
   {{- end }}
 
 # Oh My ZSH stuff
