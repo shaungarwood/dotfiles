@@ -94,6 +94,12 @@ case $OS in
     ;;
 
   "Linux")
+    # if there is no seat, there is no graphics card
+    if ! loginctl list-sessions --no-legend | awk '{print $4}' | grep -q .; then
+      echo "No graphical session detected. Assuming headless server. Skipping GUI installations."
+      exit 0
+    fi
+
     sudo apt-get update
     sudo apt-get install -y sway rofi swaybg swaylock # waybar
 
