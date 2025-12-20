@@ -26,7 +26,14 @@ include /etc/sway/config-vars.d/*
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # ln -sf /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1136x640.png ~/Pictures/Wallpapers/wallpaper
-output * bg ~/Pictures/Wallpapers/wallpaper fill
+set $background /home/csw/Pictures/Wallpapers/naval.png
+# output * bg $background fill
+# output * bg ~/Pictures/Wallpapers/wallpaper fill
+# set $apply_background swaymsg 'output * swaybg $background fill'
+
+# i'm not sure what's going on, but if you reboot and need to set the wallpaper:
+# swaymsg 'output * bg  /home/csw/Pictures/Wallpapers/batman1.webp fill'
+
 #
 # Example configuration:
 #
