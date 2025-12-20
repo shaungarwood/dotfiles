@@ -19,7 +19,8 @@ return {
           auto_quoting = true, -- enable/disable auto-quoting
           mappings = {         -- extend mappings
             i = {
-              ["<C-Space>"] = require("telescope-live-grep-args.actions").quote_prompt(),
+              -- ["<C-Space>"] = require("telescope-live-grep-args.actions").quote_prompt(),
+              ["<Tab>"] = require("telescope-live-grep-args.actions").quote_prompt(),
             },
           },
         },
