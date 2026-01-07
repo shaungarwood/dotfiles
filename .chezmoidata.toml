@@ -1,3 +1,6 @@
+[variables]
+  gui = false # Set to true on GUI machines, false on headless.
+
 [hostnames]
 personal = [ "distressed-phase" ]
 personal_remote = [ "greasy-gold", "brisk-falcon", "blunderbore", "overkill-1" ]
