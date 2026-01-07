@@ -6,6 +6,7 @@ return {
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects", -- syntax aware text-object (i think you can select a method)
       "windwp/nvim-ts-autotag",                      -- tag autocloser (ip - inner paragraph, ap - paragraph)
+      "RRethy/nvim-treesitter-endwise",              -- auto-add 'end' in Ruby, Lua, etc.
     },
     config = function()
       -- import nvim-treesitter plugin
@@ -20,6 +21,10 @@ return {
         indent = { enable = true },
         -- enable autotagging (w/ nvim-ts-autotag plugin)
         autotag = {
+          enable = true,
+        },
+        -- enable auto-ending (w/ nvim-treesitter-endwise plugin)
+        endwise = {
           enable = true,
         },
         -- ensure these language parsers are installed
