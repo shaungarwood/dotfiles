@@ -1,17 +1,5 @@
 #!/usr/bin/env bash
 
-# List of remote hostnames where GUI components should not be installed.
-PERSONAL_REMOTE_HOSTNAMES=("greasy-gold")
-
-# Check if the current hostname is in the list of remote hostnames.
-CURRENT_HOSTNAME=$(hostname)
-for remote_host in "${PERSONAL_REMOTE_HOSTNAMES[@]}"; do
-  if [[ "$CURRENT_HOSTNAME" == "$remote_host" ]]; then
-    echo "Current host '$CURRENT_HOSTNAME' is a personal remote host. Skipping Sway GUI installation."
-    exit 0
-  fi
-done
-
 install_light() {
   # light is backlight control
   sudo apt-get install light

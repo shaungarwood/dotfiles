@@ -10,20 +10,19 @@ alias drake="dip rake"
 alias drspec="dip rspec"
   {{- end }}
 
-  {{- if has .chezmoi.hostname .hostnames.personal }}
 # personal laptop stuff
+  {{- if .variables.gui }}
 alias netflix="chromium --app=https://netflix.com"
-alias nm-restart="sudo service NetworkManager restart"
 alias plex="chromium --app=https://app.plex.tv/desktop"
-alias vc="veracrypt -t -k '' --pim=0 --protect-hidden=no"
-alias vg="vagrant"
+alias nm-restart="sudo service NetworkManager restart"
   {{- end }}
+alias vc="veracrypt -t -k '' --pim=0 --protect-hidden=no"
 
 # universal stuff
 alias c=clear
 alias cm="chezmoi -v"
 alias delete_older_than_3_days="find . -mtime +3 -delete"
-alias dc=docker-compose
+alias dc="docker compose"
 alias fuck='sudo $(history -p \!\!)'
 alias g='git'
 alias i="cd && irb"

@@ -1,3 +1,12 @@
 README.md
 TODO.md
 Vagrantfile
+
+{{ if not .variables.gui -}}
+# Ignore GUI-related configurations and scripts if 'gui' is false
+dot_config/sway/
+dot_config/run_once_before_sway.sh
+dot_config/waybar/
+dot_config/kitty/
+dot_config/ghostty/
+{{- end }}
