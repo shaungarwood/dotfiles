@@ -16,8 +16,12 @@ if [[ $SHELL != *"zsh"* ]]; then
       packages=("ripgrep" "shred" "htop" "visidata" "pass")
       for pkg in "${packages[@]}"; do
         echo "Installing $pkg..."
+        INSTALL_COMMAND="sudo apt-get install -y"
+        if [ "$pkg" == "pass" ]; then
+          INSTALL_COMMAND+=" --no-install-recommends"
+        fi
         # We have do this silly thing because there is NO way to continue the script if a package fails to install
-        sudo apt-get install -y "$pkg" || {
+        $INSTALL_COMMAND "$pkg" || {
           echo "Warning: $pkg could not be installed. Continuing..."
         }
       done
