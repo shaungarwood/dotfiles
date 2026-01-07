@@ -44,8 +44,8 @@ Change a managed chezmoi file to be a template.
 
 This setup can distinguish between GUI and headless machines using a `gui` variable.
 
-- **`gui` variable**: This is defined in `.chezmoidata.toml`. When you run `chezmoi init` on a new machine, you will be prompted to set this value (`true` for GUI, `false` for headless).
-- **`.chezmoiignore`**: This file uses the `gui` variable to automatically ignore GUI-specific applications (like Sway, Kitty, etc.) on headless systems.
+- **`.chezmoi.toml.tmpl`**: This file contains a `promptBool` function that makes `chezmoi init --apply --interactive` ask you if the machine has a GUI. The result is stored in the `.gui` template variable.
+- **`.chezmoiignore`**: This file uses the `.gui` variable to automatically ignore GUI-specific applications (like Sway, Kitty, etc.) on headless systems.
 
 ## Bitwarden Secret Management
 

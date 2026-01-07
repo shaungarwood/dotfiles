@@ -2,7 +2,7 @@ README.md
 TODO.md
 Vagrantfile
 
-{{ if not .variables.gui -}}
+{{ if not .gui -}}
 # Ignore GUI-related configurations and scripts if 'gui' is false
 dot_config/sway/
 dot_config/run_once_before_sway.sh
