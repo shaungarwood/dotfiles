@@ -1,5 +1,11 @@
 # TODO
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+headless install is installing a lot of gui stuff
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+- add bitwarden install script (needed for some api keys)
+
 - adding this to get git working on phone
 - holy crap, i think it worked
 
