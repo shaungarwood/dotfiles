@@ -4,13 +4,12 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects", -- syntax aware text-object (i think you can select a method)
       "windwp/nvim-ts-autotag",                      -- tag autocloser (ip - inner paragraph, ap - paragraph)
       "RRethy/nvim-treesitter-endwise",              -- auto-add 'end' in Ruby, Lua, etc.
     },
     config = function()
       -- import nvim-treesitter plugin
-      local treesitter = require("nvim-treesitter.configs")
+      local treesitter = require("nvim-treesitter")
 
       -- configure treesitter
       treesitter.setup({ -- enable syntax highlighting
