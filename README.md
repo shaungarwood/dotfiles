@@ -49,7 +49,7 @@ This setup can distinguish between GUI and headless machines using a `gui` varia
 
 ## Bitwarden Secret Management
 
-Some configuration files (like Crush LLM configs) use Bitwarden to store API keys and secrets securely.
+Some configuration files use Bitwarden to store API keys and secrets securely.
 
 **⚠️ Important:** If Bitwarden is not unlocked, `chezmoi apply` will **fail safely** (existing files won't be modified).
 
@@ -76,7 +76,7 @@ chezmoi apply
 
 ```bash
 # View secrets
-bw get item "Crush LLM Secrets"
+bw get item "Item Name"
 
 # Create new secret item
 cat << 'EOF' > /tmp/secrets.json
@@ -93,7 +93,7 @@ bw create item $(base64 -w 0 /tmp/secrets.json)
 rm /tmp/secrets.json
 
 # Edit secrets (get item, edit JSON, update)
-ITEM_ID=$(bw get item "Crush LLM Secrets" | jq -r '.id')
+ITEM_ID=$(bw get item "Item Name" | jq -r '.id')
 bw get item "$ITEM_ID" > /tmp/item.json
 # Edit /tmp/item.json
 bw encode < /tmp/item.json | bw edit item "$ITEM_ID"
