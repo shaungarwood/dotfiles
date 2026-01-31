@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Prevent interactive prompts during package installation
+export DEBIAN_FRONTEND=noninteractive
+export TZ=America/Denver
+
 if [[ $(uname) == "Darwin" ]]; then
   echo "Exiting because this script is not meant to be run on MacOS"
   exit 0
@@ -9,7 +13,13 @@ fi
 # I'm guessing Mac already has what it needs
 if [[ $(uname) == "Linux" ]]; then
   sudo apt-get update
-  sudo apt-get install -y gcc make zlib1g-dev libssl-dev libffi-dev
+  sudo apt-get install -y \
+    gcc \
+    make \
+    zlib1g-dev \
+    libssl-dev \
+    libffi-dev \
+    libyaml-dev
 fi
 
 # Install asdf

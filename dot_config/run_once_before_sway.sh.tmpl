@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+{{- if not (index .variables "gui") }}
+# Skip sway installation on headless systems
+exit 0
+{{- end }}
+
+export DEBIAN_FRONTEND=noninteractive
 
 install_light() {
   # light is backlight control

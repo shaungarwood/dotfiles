@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Prevent interactive prompts during package installation
+export DEBIAN_FRONTEND=noninteractive
+export TZ=America/Denver
+
 # Install zsh if the current shell is not zsh
 if [[ $SHELL != *"zsh"* ]]; then
   OS=$(uname)
@@ -36,5 +40,5 @@ fi
 
 # Install oh-my-zsh
 if [ ! -d "$HOME/.oh-my-zsh/" ]; then
-  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi

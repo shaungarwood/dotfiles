@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+
+if command -v docker > /dev/null 2>&1; then
+    echo "docker is already installed. Exiting."
+    exit 0
+fi
+
+OS=$(uname)
+
+case $OS in
+  "Darwin")
+    echo "Skipping Docker installation on macOS"
+    echo "Docker on macOS requires Docker Desktop, Colima, or OrbStack"
+    echo "Install manually if needed"
+    exit 0
+    ;;
+
+  "Linux")
+    echo "Installing Docker Engine..."
+
+    # Clean up Docker Desktop remnants if present
+    if [ -d "$HOME/.docker" ]; then
+      echo "→ Checking for Docker Desktop remnants..."
+
+      # Switch away from desktop context if it's active
+      if docker context ls 2>/dev/null | grep -q "desktop-linux \*"; then
+        echo "  Switching from desktop-linux context to default..."
+        docker context use default 2>/dev/null || true
+      fi
+
+      # Clean up desktop credsStore from config.json
+      if [ -f "$HOME/.docker/config.json" ] && grep -q '"credsStore": "desktop"' "$HOME/.docker/config.json"; then
+        echo "  Removing Docker Desktop credential store..."
+        sed -i '/"credsStore": "desktop"/d' "$HOME/.docker/config.json"
+        # Clean up empty lines and fix JSON formatting
+        sed -i '/^[[:space:]]*$/d' "$HOME/.docker/config.json"
+      fi
+    fi
+
+    # Remove old versions if present
+    echo "→ Removing old Docker packages..."
+    sudo apt-get remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
+
+    # Install prerequisites
+    sudo apt-get update
+    sudo apt-get install -y \
+      ca-certificates \
+      curl \
+      gnupg \
+      lsb-release
+
+    # Add Docker's official GPG key
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+    # Set up the repository
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    # Install Docker Engine, CLI, and plugins
+    sudo apt-get update
+    sudo apt-get install -y \
+      docker-ce \
+      docker-ce-cli \
+      containerd.io \
+      docker-buildx-plugin \
+      docker-compose-plugin
+
+    # Add user to docker group (avoid needing sudo for docker commands)
+    sudo usermod -aG docker $USER
+
+    # Start and enable Docker service
+    sudo systemctl enable docker
+    sudo systemctl start docker
+
+    echo ""
+    echo "✓ Docker installed successfully"
+    echo ""
+    echo "⚠️  IMPORTANT: Docker group membership requires logout/login"
+    echo ""
+    echo "To use docker immediately in this shell, run:"
+    echo "  newgrp docker"
+    echo ""
+    echo "This activates the docker group without logging out."
+    echo "After your next login, docker will work in all shells."
+    ;;
+
+  *)
+    echo "Unsupported OS: $OS"
+    exit 1
+    ;;
+esac
+
+# Verify installation
+echo ""
+echo "Verifying installation..."
+if groups | grep -q docker; then
+  # Already in docker group, can verify
+  docker --version
+  docker compose version 2>/dev/null || docker-compose --version
+else
+  # Not in group yet, skip docker commands
+  echo "(Docker group not active yet - run 'newgrp docker' to activate)"
+fi
+
+echo ""
+echo "Installation complete!"
