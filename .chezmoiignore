@@ -10,3 +10,9 @@ dot_config/waybar/
 dot_config/kitty/
 dot_config/ghostty/
 {{- end }}
+
+{{ if has .chezmoi.hostname .hostnames.personal_remote -}}
+# Skip on remote servers
+dot_config/kitty/
+dot_config/nvim-minimal/
+{{- end }}

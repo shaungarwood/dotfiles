@@ -19,7 +19,13 @@ if [[ $(uname) == "Linux" ]]; then
     zlib1g-dev \
     libssl-dev \
     libffi-dev \
-    libyaml-dev
+    libyaml-dev \
+    libbz2-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    liblzma-dev
 fi
 
 # Install asdf
