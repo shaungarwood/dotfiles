@@ -13,7 +13,6 @@ chezmoi/
 ├── dot_config/              # Application configurations
 │   ├── nvim/               # Primary editor (multiple setups)
 │   ├── nvim-minimal/       # Lightweight nvim config
-│   ├── nvim-notes/         # Note-taking nvim setup
 │   ├── tmux/               # Terminal multiplexer
 │   ├── kitty/              # Terminal emulator
 │   ├── ghostty/            # Alternative terminal
