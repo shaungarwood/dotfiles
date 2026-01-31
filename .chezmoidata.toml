@@ -3,6 +3,6 @@
 
 [hostnames]
 personal = [ "distressed-phase" ]
-personal_remote = [ "greasy-gold", "brisk-falcon", "blunderbore", "overkill-1" ]
+personal_remote = [ "greasy-gold", "blunderbore", "kestrel" ]
 # we keep changing names! why not add ALL the names they use?
 work = [ "Shauns-MacBook-Pro.local", "Mac", "Shauns-MacBook-Pro"]
