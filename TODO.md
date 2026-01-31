@@ -42,6 +42,14 @@ Add templated `.ssh/config`
 ### Pry
 Can default ~/.pryrc coexist with project-level configs?
 
+## Testing & CI
+
+### GitHub Actions CI/CD
+Set up automated testing for chezmoi installs
+- Use existing Docker test harness from `test/` directory
+- Run on PR/push to catch install errors early
+- Test both GUI and headless configurations
+
 ## Cleanup
 
 ### Aliases
