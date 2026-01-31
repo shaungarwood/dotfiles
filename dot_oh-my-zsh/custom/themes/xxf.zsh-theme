@@ -16,11 +16,12 @@ function box_name {
 # Display hostname with hashed color
 function colored_hostname {
     local hostname=$(box_name)
-    # Hash hostname and convert to number 1-255 (avoid 0=black, 16=black)
+    # Hash hostname with better color distribution
     local hash=$(echo -n "$hostname" | cksum | cut -d' ' -f1)
-    local color_code=$(((hash % 230) + 17))  # Use 17-247 range for better colors
-    # Use ANSI 256-color code: ESC[38;5;Nm
-    echo "%{\\e[38;5;${color_code}m%}[${hostname}]%{$reset_color%}"
+    # Multiply by prime and add hostname length for better spread across spectrum
+    local color_code=$((((hash * 97 + ${#hostname}) % 215) + 17))  # Use 17-231 range
+    # Use zsh native 256-color format
+    print -P "%F{$color_code}[${hostname}]%f"
 }
 
 # Directory info.
