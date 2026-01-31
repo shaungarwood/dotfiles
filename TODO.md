@@ -1,93 +1,53 @@
 # TODO
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-headless install is installing a lot of gui stuff
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+## Package Management
 
-- add bitwarden install script (needed for some api keys)
+### Mise Evaluation
+Evaluate mise as asdf replacement: https://mise.jdx.dev/getting-started.html
+- Compare performance/ease vs asdf
+- Candidate packages: neovim, tmux, lazygit, tldr, ripgrep, bitwarden
 
-- adding this to get git working on phone
-- holy crap, i think it worked
-
- - added waybar, but don't have a script to install it yet
- - a bunch of the linux stuff is installing on my mac
-
-
-## kitty
-ubuntu - apt, not brew
-
-## Mise
-check out mise
-https://mise.jdx.dev/getting-started.html
-how much faster/easier is it?
-there's a comparison section for mise vs asdf.
-
-mise:
- - bitwarden
- - neovim
- - tmux
- - lazygit
- - tldr
- - ripgrep
- - kitty??
-
-
-## brew
+### Brew Setup
+Install script notes:
+```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-same for linux and mac
+```
+- Same installer for Linux/macOS
+- Linux: Install `build-essential` + `brew install gcc`
+- Add shellenv to .zshrc
 
-==> Next steps:
-- Run these two commands in your terminal to add Homebrew to your PATH:
-    (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/csw/.zshrc
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-- Install Homebrew's dependencies if you have sudo access:
-    sudo apt-get install build-essential
-  For more information, see:
-    https://docs.brew.sh/Homebrew-on-Linux
-- We recommend that you install GCC:
-    brew install gcc
+## Application Setup
 
-do the brew install gcc, even though i had it - i think they need it for other stuff
+### Bitwarden
+Add install script (needed for API keys)
 
+### Kitty
+Ubuntu: Use `apt`, not brew
 
-## vim
-! get a light theme for nvim! and an alias to switch between them
+### Neovim
+- Get light theme + alias to switch themes
+- Consider switching to brew/mise from PPA
+- Add tpope/rails.vim
 
-nvim
-  sudo add-apt-repository ppa:neovim-ppa/unstable -y
+### Tmux
+Different colors per system/environment
 
-may be able to switch this to brew or mise
+## Configuration
 
-tpope/rails.vim
+### SSH
+Add templated `.ssh/config`
+- Different configs per environment (personal/work/remote)
+- Consider separate files per host category
 
+### Pry
+Can default ~/.pryrc coexist with project-level configs?
 
-## tmux
-different colors for different systems
+## Cleanup
 
+### Aliases
+Remove/template GUI-specific aliases (veracrypt, rails stuff)
 
-## ssh
-add .ssh/config
-how to differenciate the different local environments?
-maybe just full on different files
-
-
-## pry
-can i use a default on in my home dir?
-will it override the one in the project?
-
-
-## random packages
-files to add:
- 5. python
-   yt-dlp
- 6. default packages
- 8. nice pryrc?
-
-random:
- - aliases contain gui stuff, veryacrypt, rails
-
-==> Casks
-chromium
-zulu11
-font-dejavu-sans-mono-for-powerline
-mitmproxy
+### Random Packages
+- Python: yt-dlp
+- Font: font-dejavu-sans-mono-for-powerline
+- Tools: chromium, zulu11, mitmproxy
