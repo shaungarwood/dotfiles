@@ -22,6 +22,7 @@ case $OS in
     # Install essential tools needed by other scripts
     sudo apt-get install -y \
       git \
+      gpg \
       curl \
       wget \
       ca-certificates \
