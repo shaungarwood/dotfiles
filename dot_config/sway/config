@@ -60,6 +60,9 @@ input "type:touchpad" {
     pointer_accel 0.7
     accel_profile adaptive
     dwt enabled
+    drag enabled
+    drag_lock disabled
+    click_method clickfinger
 }
 
 ### Key bindings
@@ -173,6 +176,9 @@ input "type:touchpad" {
 
     # Screenshot (writes to ~/Pictures/Screenshots)
     bindsym Print exec 'grimshot savecopy anything'
+
+    # Toggle touchpad on/off
+    bindsym $mod+t input type:touchpad events toggle enabled disabled
 
 #
 # Scratchpad:
