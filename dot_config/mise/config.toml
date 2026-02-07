@@ -1,0 +1,18 @@
+# mise configuration - replaces asdf for language runtime management
+# https://mise.jdx.dev/configuration.html
+
+[tools]
+# Language runtimes (migrated from asdf)
+nodejs = "latest"
+ruby = "latest"
+python = "latest"
+
+# CLI tools
+tirith = "latest"
+
+[settings]
+# Enable experimental features if needed
+experimental = false
+
+# Verbose output for debugging
+verbose = false

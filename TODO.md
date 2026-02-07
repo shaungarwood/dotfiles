@@ -2,10 +2,23 @@
 
 ## Package Management
 
-### Mise Evaluation
-Evaluate mise as asdf replacement: https://mise.jdx.dev/getting-started.html
-- Compare performance/ease vs asdf
-- Candidate packages: neovim, tmux, lazygit, tldr, ripgrep, bitwarden
+### Mise (asdf replacement)
+Reference: https://mise.jdx.dev/getting-started.html
+
+**Status**: Language runtimes migrated (nodejs, ruby, python)
+
+**Completed**:
+- [x] Create run_once_before_mise.sh installer
+- [x] Track mise config file (.config/mise/config.toml)
+- [x] Migrate language runtimes from asdf (nodejs, ruby, python)
+- [x] Add mise activation to .zshrc template
+- [x] Create asdf cleanup script (run_once_after_cleanup_asdf.sh)
+
+**Future Evaluation**:
+- [ ] Evaluate mise for CLI tools (neovim, tmux, lazygit, tldr, ripgrep, bitwarden, tirith)
+  - Verify cross-platform parity (macOS/Linux)
+  - Check if mise provides same version flexibility as brew/apt/manual installs
+  - Consider: Does mise make these easier to manage than current approach?
 
 ### Brew Setup
 Install script notes:
