@@ -14,11 +14,23 @@ Reference: https://mise.jdx.dev/getting-started.html
 - [x] Add mise activation to .zshrc template
 - [x] Create asdf cleanup script (run_once_after_cleanup_asdf.sh)
 
-**Future Evaluation**:
-- [ ] Evaluate mise for CLI tools (neovim, tmux, lazygit, tldr, ripgrep, bitwarden, tirith)
-  - Verify cross-platform parity (macOS/Linux)
-  - Check if mise provides same version flexibility as brew/apt/manual installs
-  - Consider: Does mise make these easier to manage than current approach?
+**CLI Tools Migration (Recommended)**:
+- [ ] Move to mise (strong candidates):
+  - [ ] neovim - Version management useful, cross-platform consistency
+  - [ ] lazygit - Simpler than manual install
+  - [ ] ripgrep - Fast, version pinning available
+  - [ ] tldr - Simple tool, mise handles well
+- [ ] Keep current approach (don't move):
+  - zsh - System shell, must exist before mise loads
+  - tmux - System integration better, but mise works if needed
+  - bitwarden-cli - System package more secure/trusted
+
+**Benefits of migration:**
+- Single config for all machines (identical versions everywhere)
+- No OS-specific install scripts needed
+- Auto-updates with `mise upgrade`
+- Current: neovim from brew (mac) vs ppa (linux) → different versions
+- After: neovim from mise registry → identical everywhere
 
 ### Brew Setup
 Install script notes:
@@ -31,6 +43,13 @@ Install script notes:
 
 ## Application Setup
 
+### Claude Code
+Add native installer to chezmoi setup
+- [ ] Create run_once_before_claude_code.sh
+- [ ] Use native installer (auto-updates, no Node.js required)
+- [ ] Linux/macOS: `curl -fsSL https://claude.ai/install.sh | bash`
+- [ ] Don't use mise/npm (npm method deprecated, no auto-updates)
+
 ### Bitwarden
 Add install script (needed for API keys)
 
@@ -38,9 +57,9 @@ Add install script (needed for API keys)
 Ubuntu: Use `apt`, not brew
 
 ### Neovim
-- Get light theme + alias to switch themes
-- Consider switching to brew/mise from PPA
-- Add tpope/rails.vim
+- [ ] Get light theme + alias to switch themes
+- [ ] Switch to mise from PPA/brew (cross-platform consistency)
+- [ ] Add tpope/rails.vim
 
 ### Tmux
 Different colors per system/environment
