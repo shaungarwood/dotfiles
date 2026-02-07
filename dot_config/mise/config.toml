@@ -3,9 +3,9 @@
 
 [tools]
 # Language runtimes (migrated from asdf)
-nodejs = "latest"
+nodejs = "lts"        # Use LTS for stability
 ruby = "latest"
-python = "latest"
+python = "3.13"       # Use stable version (3.14 not fully released)
 
 # CLI tools
 tirith = "latest"
