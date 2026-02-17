@@ -29,7 +29,6 @@ When user says "todo", execute this workflow:
    ## Completed
    - [Finished items from this session]
    ```
-6. **Clean trailing whitespace**: `sed -i 's/[[:space:]]*$//' TODO.md`
 
 ## Template for new TODO.md
 ```markdown
