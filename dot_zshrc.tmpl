@@ -6,8 +6,8 @@ compinit
 
 # General ZSH stuff
 HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=-1
+SAVEHIST=-1
 path+=("$HOME/.local/bin")
 path+=("$HOME/bin")
 source "$HOME/.aliases"
@@ -39,9 +39,6 @@ autoload -U +X bashcompinit && bashcompinit # autocomplete and syntax highlighti
 
 # mise - modern runtime manager (replaces asdf)
 eval "$(mise activate zsh)"
-
-# tirith - directory-based environment manager
-eval "$(tirith init --shell zsh)"
 
 # OS specific stuff
   {{- if eq .chezmoi.os "darwin" }}
