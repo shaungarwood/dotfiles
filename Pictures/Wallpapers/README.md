@@ -8,7 +8,7 @@ Wallpapers are set via symlinks so you can swap images without editing config fi
 |--------------------------|--------------------------------|---------------------------------------|
 | `current_wallpaper`      | Sway desktop background        | `~/.config/sway/config`               |
 | `current_lockscreen`     | swaylock (lock screen)         | `~/.local/bin/lock-screen.sh`         |
-| `current_login_wallpaper`| nwg-hello (login/greeter)      | `/etc/nwg-hello/current_login_wallpaper` → `/etc/nwg-hello/sway-config` |
+| `current_login_wallpaper`| nwg-hello CSS background       | `/etc/nwg-hello/nwg-hello-default.css` |
 
 ## How to swap wallpapers
 
@@ -25,9 +25,10 @@ ln -sf ~/Pictures/Wallpapers/newimage.jpg ~/Pictures/Wallpapers/current_lockscre
 ```
 
 ### Login screen wallpaper
-The login screen runs as the `greeter` user which can't read `~/Pictures/`,
-so the symlink lives in `/etc/nwg-hello/` instead:
+nwg-hello renders its own GTK CSS background (not sway's output background).
+The wallpaper is set in the CSS and the file lives in /etc/nwg-hello/:
 ```sh
-sudo ln -sf ~/Pictures/Wallpapers/newimage.jpg /etc/nwg-hello/current_login_wallpaper
+sudo cp ~/Pictures/Wallpapers/newimage.jpg /etc/nwg-hello/login_wallpaper.jpeg
 # takes effect on next logout/reboot
 ```
+The CSS at `/etc/nwg-hello/nwg-hello-default.css` references `/etc/nwg-hello/login_wallpaper.jpeg`.
