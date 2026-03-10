@@ -5,4 +5,4 @@
 personal = [ "distressed-phase" ]
 personal_remote = [ "blunderbore", "kestrel", "magpie" ]
 # we keep changing names! why not add ALL the names they use?
-work = [ "Shauns-MacBook-Pro.local", "Mac", "Shauns-MacBook-Pro", "Shauns-MacBook-Pro-2.local"]
+work = [ "Shauns-MacBook-Pro", "Shauns-MacBook-Pro-2"]
