@@ -1,4 +1,5 @@
 README.md
+.config/zellij/certs
 CLAUDE.md
 TODO.md
 Vagrantfile
