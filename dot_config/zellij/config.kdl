@@ -482,11 +482,11 @@ web_sharing "on"
 // A path to a certificate file to be used when setting up the web client to serve the
 // connection over HTTPs
 // 
-// web_server_cert "/path/to/cert.pem"
+web_server_cert "/home/csw/.config/zellij/certs/local.crt"
 // A path to a key file to be used when setting up the web client to serve the
 // connection over HTTPs
-// 
-// web_server_key "/path/to/key.pem"
+//
+web_server_key "/home/csw/.config/zellij/certs/local.key"
 /// Whether to enforce https connections to the web server when it is bound to localhost
 /// (127.0.0.0/8)
 ///
