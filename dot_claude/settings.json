@@ -1,0 +1,43 @@
+{
+  "voiceEnabled": true,
+  "permissions": {
+    "allow": [
+      "WebFetch",
+      "WebSearch",
+      "Bash(find)",
+      "Bash(find *)",
+      "Bash(ls)",
+      "Bash(ls *)",
+      "Bash(head)",
+      "Bash(head *)",
+      "Bash(cat)",
+      "Bash(cat *)",
+      "Bash(grep)",
+      "Bash(grep *)",
+      "Bash(rg)",
+      "Bash(rg *)",
+      "Bash(git ls-files)",
+      "Bash(git ls-files *)",
+      "Bash(git log)",
+      "Bash(git log *)",
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git diff)",
+      "Bash(git diff *)",
+      "Bash(git show)",
+      "Bash(git show *)",
+      "Bash(git branch)",
+      "Bash(git branch *)",
+      "Bash(git remote)",
+      "Bash(git remote *)",
+      "mcp__obsidian__read_note",
+      "mcp__obsidian__read_multiple_notes",
+      "mcp__obsidian__list_directory",
+      "mcp__obsidian__search_notes",
+      "mcp__obsidian__get_notes_info",
+      "mcp__obsidian__get_vault_stats",
+      "mcp__obsidian__list_all_tags",
+      "mcp__obsidian__get_frontmatter"
+    ]
+  }
+}
