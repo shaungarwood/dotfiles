@@ -41,6 +41,11 @@ autoload -U +X bashcompinit && bashcompinit # autocomplete and syntax highlighti
 export MISE_IGNORED_CONFIG_PATHS="$HOME/.local/share/chezmoi"
 eval "$(mise activate zsh)"
 
+# Zellij: start a new session per terminal (use Ctrl+O → w to attach to existing)
+if [[ -z "$ZELLIJ" ]]; then
+  zellij
+fi
+
 # OS specific stuff
   {{- if eq .chezmoi.os "darwin" }}
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
