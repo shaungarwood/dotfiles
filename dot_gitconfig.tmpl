@@ -40,6 +40,8 @@
 [include]
   {{- if has .chezmoi.hostname .hostnames.work }}
   path = ~/.gitconfig.work
+[user]
+  signingkey = /Users/shaungarwood/.ssh/id_rsa.pub
   {{- else }}
   path = ~/.gitconfig.personal
   {{- end }}

@@ -2,7 +2,7 @@
   gui = false # Set to true on GUI machines, false on headless.
 
 [hostnames]
-personal = [ "distressed-phase" ]
-personal_remote = [ "greasy-gold", "blunderbore", "kestrel" ]
+personal = [ "distressed-phase", "chickadee" ]
+personal_remote = [ "blunderbore", "kestrel", "magpie" ]
 # we keep changing names! why not add ALL the names they use?
-work = [ "Shauns-MacBook-Pro.local", "Mac", "Shauns-MacBook-Pro"]
+work = [ "Shauns-MacBook-Pro", "Shauns-MacBook-Pro-2"]

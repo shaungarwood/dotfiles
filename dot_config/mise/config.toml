@@ -8,7 +8,7 @@ ruby = "latest"
 python = "3.13"       # Use stable version (3.14 not fully released)
 
 # CLI tools
-tirith = "latest"
+zellij = "latest"
 
 [settings]
 # Enable experimental features if needed

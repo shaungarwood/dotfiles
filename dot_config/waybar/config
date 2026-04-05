@@ -5,53 +5,20 @@
 	"position": "top",
 
 	"modules-left": [
-		"sway/workspaces",
-		"custom/right-arrow-dark"
+		"sway/workspaces"
 	],
 	"modules-center": [
-		"custom/left-arrow-dark",
 		"clock#1",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
 		"clock#2",
-		"custom/right-arrow-dark",
-		"custom/right-arrow-light",
-		"clock#3",
-		"custom/right-arrow-dark"
+		"clock#3"
 	],
 	"modules-right": [
-		"custom/left-arrow-dark",
 		"pulseaudio",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
 		"memory",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
 		"cpu",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
 		"battery",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
 		"tray"
 	],
-
-	"custom/left-arrow-dark": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/left-arrow-light": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/right-arrow-dark": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/right-arrow-light": {
-		"format": "",
-		"tooltip": false
-	},
 
 	"sway/workspaces": {
 		"disable-scroll": true,
@@ -60,51 +27,34 @@
 
 	"clock#1": {
 		"format": "{:%a}",
-    "timezone": "America/Denver",
+		"timezone": "America/Denver",
 		"tooltip": false
 	},
 	"clock#2": {
 		"format": "{:%H:%M}",
-    "timezone": "America/Denver",
+		"timezone": "America/Denver",
 		"tooltip": false
 	},
 	"clock#3": {
 		"format": "{:%m-%d}",
-    "timezone": "America/Denver",
+		"timezone": "America/Denver",
 		"tooltip": false
 	},
 
 	"pulseaudio": {
 		"format": "{icon} {volume:2}%",
-		"format-bluetooth": "{icon}  {volume}%",
+		"format-bluetooth": "{icon}  {volume}%",
 		"format-muted": "MUTE",
 		"format-icons": {
-			"headphones": "",
-			"default": [
-				"",
-				""
-			]
+			"headphones": "",
+			"default": ["", ""]
 		},
-    "scroll-step": 5,
-    "on-click": "pamixer -t",
-    "on-click-right": "pavucontrol"
-  },
+		"scroll-step": 5,
+		"on-click": "pamixer -t",
+		"on-click-right": "pavucontrol"
+	},
 
-  "network": {
-    "interface": "wlp2s0f3",
-    "format": "{ifname}",
-    "format-wifi": "{essid} ({signalStrength}%) ",
-    "format-ethernet": "{ifname} ",
-    "format-disconnected": "", //An empty format will hide the module.
-    "format-disconnected": "",
-    "tooltip-format": "{ifname}",
-    "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
-    "tooltip-format-ethernet": "{ifname} ",
-    "tooltip-format-disconnected": "Disconnected",
-    "max-length": 50
-  },
-
-  "memory": {
+	"memory": {
 		"interval": 5,
 		"format": "Mem {}%"
 	},
@@ -119,20 +69,9 @@
 			"critical": 15
 		},
 		"format": "{icon} {capacity}%",
-		"format-icons": [
-			"",
-			"",
-			"",
-			"",
-			""
-		]
-	},
-	"disk": {
-		"interval": 5,
-		"format": "Disk {percentage_used:2}%",
-		"path": "/"
+		"format-icons": ["", "", "", "", ""]
 	},
 	"tray": {
-		"icon-size": 10 
+		"icon-size": 10
 	}
 }
