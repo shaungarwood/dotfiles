@@ -1,8 +1,11 @@
 Host work-mac
-  User shaun.garwood
+    User shaun.garwood
+    HostName work-mac.tail3e170e.ts.net
 
 Host work-mac2
-  User shaungarwood
+    User shaungarwood
+    HostName work-mac2.tail3e170e.ts.net
 
 Host blunderbore chickadee distressed-phase kestrel magpie
-  User csw
+    User csw
+    HostName %h.tail3e170e.ts.net
