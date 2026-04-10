@@ -12,6 +12,8 @@ test/
 .config/waybar
 .config/kitty
 .config/ghostty
+.local/bin/lock-screen.sh
+.local/bin/ronema
 {{- end }}
 
 {{ if has .chezmoi.hostname .hostnames.personal_remote -}}

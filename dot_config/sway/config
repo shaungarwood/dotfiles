@@ -15,39 +15,34 @@ set $term ".local/kitty.app/bin/kitty"
 set $browser "firefox"
 set $menu rofi -show drun -theme solarized -font "hack 10" -show-icons
 
-set $lock "swaylock -f \
-  --image ~/Pictures/Wallpapers/dark-hacker-dog.webp \
-  --ignore-empty-password  \
-  --indicator-radius 200"
+set $lock "~/.local/bin/lock-screen.sh"
 
 include /etc/sway/config-vars.d/*
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-# ln -sf /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1136x640.png ~/Pictures/Wallpapers/wallpaper
-set $background /home/csw/Pictures/Wallpapers/naval.png
-# output * bg $background fill
-# output * bg ~/Pictures/Wallpapers/wallpaper fill
-# set $apply_background swaymsg 'output * swaybg $background fill'
+set $background /home/csw/Pictures/Wallpapers/current_wallpaper
+output eDP-1 scale 1.25
+output * bg $background fill
 
-# i'm not sure what's going on, but if you reboot and need to set the wallpaper:
-# swaymsg 'output * bg  /home/csw/Pictures/Wallpapers/batman1.webp fill'
+# Blue light filter (Denver, CO)
+exec wlsunset -l 39.7 -L -104.9 -t 2000 -T 6500
+exec nm-applet --indicator
 
+### Swaylock / Swayidle
 #
-# Example configuration:
-#
-#   output HDMI-A-1 resolution 1920x1080 position 1920,0
-#
-# You can get the names of your outputs by running: swaymsg -t get_outputs
-
-### Swaylock
-#
-bindswitch --reload --locked lid:on exec $lock
+# Lid close: lock + suspend (lock-screen.sh runs swaylock, dpms off, then suspend)
+bindswitch --locked lid:on exec ~/.local/bin/lock-screen.sh
+# Lid open: turn display back on (swaylock already showing)
+bindswitch --locked lid:off exec swaymsg "output * dpms on"
+# Before suspend: ensure locked. After resume: restart wlsunset to re-apply color temp
+exec swayidle -w \
+    before-sleep 'swaylock -f --image ~/Pictures/Wallpapers/current_lockscreen --ignore-empty-password --indicator-radius 200' \
+    after-resume 'pkill wlsunset; wlsunset -l 39.7 -L -104.9 -t 2000 -T 6500'
 
 ### Input configuration
 #
-# Example configuration:
 input "type:keyboard" {
     xkb_layout us
     xkb_options ctrl:swapcaps
@@ -71,7 +66,6 @@ input "type:touchpad" {
 #
     # Start a terminal
     bindsym $mod+Return exec $term
-    bindsym $mod+f exec $browser
 
     # Kill focused window
     bindsym $mod+q kill
@@ -94,23 +88,17 @@ input "type:touchpad" {
 #
 # Moving around:
 #
-    # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
-    bindsym $mod+$right focus right
-    # Or use $mod+[up|down|left|right]
+    # Cycle windows
+    bindsym $mod+bracketleft  focus prev sibling
+    bindsym $mod+bracketright focus next sibling
+
+    # Move your focus around (arrow keys only; hjkl freed for zellij Alt+hjkl)
     bindsym $mod+Left focus left
     bindsym $mod+Down focus down
     bindsym $mod+Up focus up
     bindsym $mod+Right focus right
 
-    # Move the focused window with the same, but add Shift
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
-    # Ditto, with arrow keys
+    # Move the focused window
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
@@ -140,17 +128,12 @@ input "type:touchpad" {
     bindsym $mod+Shift+8 move container to workspace number 8
     bindsym $mod+Shift+9 move container to workspace number 9
     bindsym $mod+Shift+0 move container to workspace number 10
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
 
     # Rename current workspace
     bindsym $mod+Shift+w exec ~/bin/rename-workspace
 #
 # Layout stuff:
 #
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
     bindsym $mod+b splith
     bindsym $mod+v splitv
 
@@ -170,9 +153,9 @@ input "type:touchpad" {
     bindsym XF86MonBrightnessDown exec sudo light -U 5
 
     # Volume
-    bindsym XF86AudioRaiseVolume exec 'pactl set-sink-volume @DEFAULT_SINK@ +1%'
-    bindsym XF86AudioLowerVolume exec 'pactl set-sink-volume @DEFAULT_SINK@ -1%'
-    bindsym XF86AudioMute exec 'pactl set-sink-mute @DEFAULT_SINK@ toggle'
+    bindsym XF86AudioRaiseVolume exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ --limit 1.0'
+    bindsym XF86AudioLowerVolume exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-'
+    bindsym XF86AudioMute exec 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle'
 
     # Screenshot (writes to ~/Pictures/Screenshots)
     bindsym Print exec 'grimshot savecopy anything'
@@ -180,26 +163,17 @@ input "type:touchpad" {
     # Toggle touchpad on/off
     bindsym $mod+t input type:touchpad events toggle enabled disabled
 
+
+
 #
 # Scratchpad:
 #
-    # Sway has a "scratchpad", which is a bag of holding for windows.
-    # You can send windows there and get them back later.
-
-    # Move the currently focused window to the scratchpad
     bindsym $mod+Shift+minus move scratchpad
-
-    # Show the next scratchpad window or hide the focused scratchpad window.
-    # If there are multiple scratchpad windows, this command cycles through them.
     bindsym $mod+minus scratchpad show
 #
 # Resizing containers:
 #
 mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
     bindsym $left resize shrink width 10px
     bindsym $down resize grow height 10px
     bindsym $up resize shrink height 10px
@@ -220,20 +194,8 @@ bindsym $mod+r mode "resize"
 #
 # Status Bar:
 #
-# Read `man 5 sway-bar` for more information about this section.
 bar {
     swaybar_command waybar
-    # position top
-    #
-    # # When the status_command prints a new line to stdout, swaybar updates.
-    # # The default just shows the current date and time.
-    # status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-    #
-    # colors {
-    #     statusline #ffffff
-    #     background #323232
-    #     inactive_workspace #32323200 #32323200 #5c5c5c
-    # }
 }
 
 include /etc/sway/config.d/*
