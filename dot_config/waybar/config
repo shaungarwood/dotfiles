@@ -16,6 +16,7 @@
 		"pulseaudio",
 		"memory",
 		"cpu",
+		"temperature",
 		"battery",
 		"tray"
 	],
@@ -61,6 +62,14 @@
 	"cpu": {
 		"interval": 5,
 		"format": "CPU {usage:2}%"
+	},
+	"temperature": {
+		"hwmon-path": "/sys/class/hwmon/hwmon7/temp1_input",
+		"critical-threshold": 90,
+		"interval": 5,
+		"format": "{temperatureC}°C",
+		"format-critical": "🔥 {temperatureC}°C",
+		"tooltip": false
 	},
 	"battery": {
 		"states": {

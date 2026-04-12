@@ -13,7 +13,7 @@ set $right l
 # Your preferred terminal emulator
 set $term ".local/kitty.app/bin/kitty"
 set $browser "firefox"
-set $menu rofi -show drun -theme solarized -font "hack 10" -show-icons
+set $menu wofi --show drun --allow-images
 
 set $lock "~/.local/bin/lock-screen.sh"
 
@@ -153,7 +153,7 @@ input "type:touchpad" {
     bindsym XF86MonBrightnessDown exec sudo light -U 5
 
     # Volume
-    bindsym XF86AudioRaiseVolume exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ --limit 1.0'
+    bindsym XF86AudioRaiseVolume exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ --limit 1.5'
     bindsym XF86AudioLowerVolume exec 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-'
     bindsym XF86AudioMute exec 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle'
 

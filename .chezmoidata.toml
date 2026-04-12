@@ -1,5 +1,5 @@
 [variables]
-  gui = false # Set to true on GUI machines, false on headless.
+  gui = true # Set to true on GUI machines, false on headless.
 
 [hostnames]
 personal = [ "distressed-phase", "chickadee" ]
