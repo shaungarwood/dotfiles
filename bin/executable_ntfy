@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# ntfy — send a message via ntfy.duck.bar
+# Usage: ntfy <message>
+
+set -euo pipefail
+
+ENV_FILE="${HOME}/.ntfy.env"
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: ntfy <message>" >&2
+  exit 1
+fi
+
+MESSAGE="$*"
+
+# Load or prompt for credentials
+if [[ -f "$ENV_FILE" ]]; then
+  # shellcheck source=/dev/null
+  source "$ENV_FILE"
+else
+  echo "No credentials found at $ENV_FILE"
+  read -rp "ntfy username: " NTFY_USER
+  read -rsp "ntfy password: " NTFY_PASS
+  echo
+  read -rp "ntfy topic (e.g. whatever): " NTFY_TOPIC
+
+  # Save for next time
+  cat > "$ENV_FILE" <<EOF
+NTFY_USER='${NTFY_USER}'
+NTFY_PASS='${NTFY_PASS}'
+NTFY_TOPIC='${NTFY_TOPIC}'
+EOF
+  chmod 600 "$ENV_FILE"
+  echo "Saved to $ENV_FILE"
+fi
+
+: "${NTFY_USER:?NTFY_USER not set in $ENV_FILE}"
+: "${NTFY_PASS:?NTFY_PASS not set in $ENV_FILE}"
+: "${NTFY_TOPIC:?NTFY_TOPIC not set in $ENV_FILE}"
+
+NTFY_URL="https://ntfy.duck.bar/${NTFY_TOPIC}"
+
+curl -fsS -u "${NTFY_USER}:${NTFY_PASS}" -d "${MESSAGE}" "${NTFY_URL}" > /dev/null
+echo "sent: ${MESSAGE}"

@@ -6,9 +6,9 @@
 nodejs = "lts"        # Use LTS for stability
 ruby = "latest"
 python = "3.13"       # Use stable version (3.14 not fully released)
-zellij = "latest"
 
 # CLI tools
+zellij = "latest"
 
 [settings]
 # Enable experimental features if needed
