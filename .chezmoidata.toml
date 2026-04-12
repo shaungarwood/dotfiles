@@ -1,5 +1,5 @@
 [variables]
-  gui = true # Set to true on GUI machines, false on headless.
+  gui = false # Default false. Override to true in ~/.config/chezmoi/chezmoi.toml on GUI machines.
 
 [hostnames]
 personal = [ "distressed-phase", "chickadee" ]
