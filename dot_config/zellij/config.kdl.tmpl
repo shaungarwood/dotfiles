@@ -3,13 +3,14 @@
 
 // UI options
 pane_frames false  // zjstatus manages UI chrome
+show_startup_tips false
 
 // Session persistence
 session_serialization true
 pane_viewport_serialization true
 
-// macOS clipboard integration
-copy_command "wl-copy"
+// Clipboard integration
+copy_command {{ if eq .chezmoi.os "darwin" }}"pbcopy"{{ else }}"wl-copy"{{ end }}
 
 // Editor for EditScrollback
 scrollback_editor "nvim"
