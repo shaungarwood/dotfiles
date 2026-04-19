@@ -86,8 +86,8 @@ keybinds clear-defaults=true {
         bind "Esc" { SwitchToMode "Normal"; }
 
         // Splits
-        bind "|" { NewPane "Right"; SwitchToMode "Normal"; }
-        bind "-" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "v" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "s" { NewPane "Down"; SwitchToMode "Normal"; }
 
         // Pane navigation
         bind "h" { MoveFocus "Left"; SwitchToMode "Normal"; }
