@@ -13,10 +13,11 @@
 		"clock#3"
 	],
 	"modules-right": [
+		"network",
 		"pulseaudio",
 		"memory",
 		"cpu",
-		"temperature",
+		"custom/temp",
 		"battery",
 		"tray"
 	],
@@ -63,12 +64,10 @@
 		"interval": 5,
 		"format": "CPU {usage:2}%"
 	},
-	"temperature": {
-		"hwmon-path": "/sys/class/hwmon/hwmon7/temp1_input",
-		"critical-threshold": 90,
+	"custom/temp": {
+		"exec": "waybar-temp",
+		"return-type": "json",
 		"interval": 5,
-		"format": "{temperatureC}°C",
-		"format-critical": "🔥 {temperatureC}°C",
 		"tooltip": false
 	},
 	"battery": {
@@ -79,6 +78,14 @@
 		},
 		"format": "{icon} {capacity}%",
 		"format-icons": ["", "", "", "", ""]
+	},
+	"network": {
+		"interval": 5,
+		"format-wifi": " {essid} ({signalStrength}%)",
+		"format-ethernet": " {ifname}",
+		"format-disconnected": "⚠ Disconnected",
+		"tooltip": false,
+		"on-click": "wifi-picker"
 	},
 	"tray": {
 		"icon-size": 10
