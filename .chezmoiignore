@@ -5,7 +5,7 @@ TODO.md
 Vagrantfile
 test/
 
-{{ if not .variables.gui -}}
+{{ if not .gui -}}
 # Ignore GUI-related configurations and scripts if 'gui' is false
 .config/sway
 .config/run_once_before_sway.sh.tmpl
