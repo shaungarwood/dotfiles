@@ -13,7 +13,7 @@ pane_viewport_serialization true
 copy_command {{ if eq .chezmoi.os "darwin" }}"pbcopy"{{ else }}"wl-copy"{{ end }}
 
 // Editor for EditScrollback
-scrollback_editor "nvim"
+scrollback_editor "nvim -u ~/.config/nvim/minimal-zellij-scrollback-config.lua"
 
 // Default layout loads zjstatus status bar
 default_layout "default"
