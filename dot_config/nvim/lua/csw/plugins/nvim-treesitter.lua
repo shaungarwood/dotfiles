@@ -1,7 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre", "BufNewFile", "VeryLazy" },
     build = ":TSUpdate",
     dependencies = {
       "windwp/nvim-ts-autotag",                      -- tag autocloser (ip - inner paragraph, ap - paragraph)

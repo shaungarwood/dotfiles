@@ -9,6 +9,7 @@ python = "3.13"       # Use stable version (3.14 not fully released)
 
 # CLI tools
 zellij = "latest"
+"npm:tree-sitter-cli" = "latest"
 
 [settings]
 # Enable experimental features if needed
