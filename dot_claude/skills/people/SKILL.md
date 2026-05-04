@@ -28,7 +28,7 @@ Determine intent from the argument:
    - "Alice" → `alice*.md` (partial match ok for first-name-only)
    - "Walter Ashford" → `walter-ashford.md`
    - "Edmund" → `edmund*.md`
-2. List `people/` and find the best match (use Glob or list_directory)
+2. List `people/` and find the best match (use Glob)
 3. If multiple matches, ask which one
 
 ---

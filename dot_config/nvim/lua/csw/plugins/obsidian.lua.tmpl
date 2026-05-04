@@ -18,5 +18,27 @@ return {
   {{- end }}
       },
     },
+    completion = {
+      nvim_cmp = true,
+      min_chars = 2,
+    },
+    daily_notes = {
+      folder = "daily",
+      date_format = "%Y-%m-%d",
+      template = "daily-template.md",
+    },
+    templates = {
+      folder = "templates",
+      date_format = "%Y-%m-%d",
+    },
   },
+  config = function(_, opts)
+    require("obsidian").setup(opts)
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "markdown",
+      callback = function()
+        vim.opt_local.conceallevel = 2
+      end,
+    })
+  end,
 }
