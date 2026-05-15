@@ -1,0 +1,30 @@
+layout {
+    pane
+
+    pane size=1 borderless=true {
+        plugin location="https://github.com/dj95/zjstatus/releases/download/v0.23.0/zjstatus.wasm" {
+            format_left  "{mode}#[fg=#839496,bg=#073642,bold] {session} #[bg=#073642]{tabs}"
+            format_right "{datetime}"
+            format_space "#[bg=#073642]"
+
+            hide_frame_for_single_pane "true"
+
+            mode_normal      "#[bg=#859900,fg=#002b36,bold] N #[fg=#859900,bg=#073642]"
+            mode_tmux        "#[bg=#b58900,fg=#002b36,bold] T #[fg=#b58900,bg=#073642]"
+            mode_locked      "#[bg=#dc322f,fg=#002b36,bold] L #[fg=#dc322f,bg=#073642]"
+            mode_resize      "#[bg=#6c71c4,fg=#002b36,bold] R #[fg=#6c71c4,bg=#073642]"
+            mode_move        "#[bg=#2aa198,fg=#002b36,bold] M #[fg=#2aa198,bg=#073642]"
+            mode_scroll      "#[bg=#268bd2,fg=#002b36,bold] S #[fg=#268bd2,bg=#073642]"
+            mode_search      "#[bg=#268bd2,fg=#002b36,bold] / #[fg=#268bd2,bg=#073642]"
+            mode_entersearch "#[bg=#268bd2,fg=#002b36,bold] ? #[fg=#268bd2,bg=#073642]"
+            mode_renametab   "#[bg=#d33682,fg=#002b36,bold] R #[fg=#d33682,bg=#073642]"
+
+            tab_normal "#[fg=#586e75,bg=#073642] {index}: {name} "
+            tab_active "#[fg=#073642,bg=#268bd2]#[fg=#002b36,bg=#268bd2,bold] {index}: {name} #[fg=#268bd2,bg=#073642]"
+
+            datetime          "#[fg=#586e75,bg=#073642] {format} "
+            datetime_format   "%b %d %H:%M"
+            datetime_timezone "America/Denver"
+        }
+    }
+}
