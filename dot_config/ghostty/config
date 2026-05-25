@@ -1,20 +1,57 @@
-# looks
+# Font
+font-family = 0xProto Nerd Font
+font-size = 10
+
+# Window
+window-padding-x = 3
+window-padding-y = 3
+gtk-titlebar = false
+
+# Background
 background-opacity = 0.97
 
-# tabs
-keybind = ctrl+a>c=new_tab
-keybind = ctrl+p=previous_tab
-keybind = ctrl+n=next_tab
+# Bell (disable audio)
+bell-features = no-system
 
-# splits
-keybind = ctrl+a>s=new_split:down
-keybind = ctrl+a>v=new_split:right
-keybind = ctrl+h=goto_split:left
-keybind = ctrl+j=goto_split:bottom
-keybind = ctrl+k=goto_split:top
-keybind = ctrl+l=goto_split:right
+# Copy/paste (Linux/Wayland)
+copy-on-select = clipboard
+keybind = shift+insert=paste_from_clipboard
 
-# scrollback
-keybind = ctrl+a>[=text:~/bin/my_scrollback.sh\n
-keybind = shift+ctrl+;=write_screen_file:paste
-keybind = ctrl+a>]=paste_from_clipboard
+# Font size adjustments
+keybind = ctrl+=increase_font_size:2
+keybind = ctrl+-=decrease_font_size:2
+keybind = shift+ctrl+=increase_font_size:2
+keybind = shift+ctrl+-=decrease_font_size:2
+
+# Quick terminal (quake-style)
+# Note: global: prefix requires XDG portal (not available on sway).
+# For true quake toggle from anywhere, add a sway keybind:
+#   bindsym ctrl+grave exec ghostty --class=quake
+# and a sway rule: for_window [app_id="quake"] floating enable, move scratchpad
+quick-terminal-position = top
+quick-terminal-animation-duration = 0.2
+quick-terminal-screen = main
+# keybind = ctrl+`=toggle_quick_terminal  # add once key syntax confirmed
+
+# Colors - Adapta Nokto Maia
+background = #222D31
+foreground = #d8d8d8
+selection-background = #2B2C2B
+selection-foreground = #16A085
+
+palette = 0=#222D31
+palette = 1=#ab4642
+palette = 2=#7E807E
+palette = 3=#f7ca88
+palette = 4=#7cafc2
+palette = 5=#ba8baf
+palette = 6=#1ABB9B
+palette = 7=#d8d8d8
+palette = 8=#585858
+palette = 9=#ab4642
+palette = 10=#8D8F8D
+palette = 11=#f7ca88
+palette = 12=#7cafc2
+palette = 13=#ba8baf
+palette = 14=#1ABB9B
+palette = 15=#f8f8f8
