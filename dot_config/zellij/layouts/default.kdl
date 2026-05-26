@@ -3,8 +3,8 @@ layout {
 
     pane size=1 borderless=true {
         plugin location="https://github.com/dj95/zjstatus/releases/download/v0.23.0/zjstatus.wasm" {
-            format_left  "{mode}#[fg=#839496,bg=#073642,bold] {session} #[bg=#073642]{tabs}"
-            format_right "{datetime}"
+            format_left  "{mode}#[bg=#073642]{tabs}"
+            format_right ""
             format_space "#[bg=#073642]"
 
             hide_frame_for_single_pane "true"
@@ -21,10 +21,6 @@ layout {
 
             tab_normal "#[fg=#586e75,bg=#073642] {index} "
             tab_active "#[fg=#073642,bg=#268bd2]#[fg=#002b36,bg=#268bd2,bold] {index} #[fg=#268bd2,bg=#073642]"
-
-            datetime          "#[fg=#586e75,bg=#073642] {format} "
-            datetime_format   "%b %d %H:%M"
-            datetime_timezone "America/Denver"
         }
     }
 }

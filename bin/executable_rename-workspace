@@ -1,0 +1,24 @@
+#!/bin/bash
+# Rename the current sway workspace.
+# Bound to Mod+Shift+w in sway config.
+
+current_num=$(swaymsg -t get_workspaces | python3 -c "
+import sys, json
+ws = json.load(sys.stdin)
+w = next(x for x in ws if x['focused'])
+print(w.get('num', ''))
+")
+
+if [ -n "$1" ]; then
+    new_name="$1"
+else
+    new_name=$(echo "" | wofi --dmenu --prompt "Rename workspace:" --width 400 --height 50 --lines 0)
+fi
+
+[ -z "$new_name" ] && exit 0
+
+if [[ "$current_num" =~ ^[0-9]+$ ]] && [[ "$new_name" != "$current_num":* ]]; then
+    new_name="${current_num}:${new_name}"
+fi
+
+swaymsg "rename workspace to \"$new_name\""

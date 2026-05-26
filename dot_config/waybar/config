@@ -24,7 +24,7 @@
 
 	"sway/workspaces": {
 		"disable-scroll": true,
-		"format": "{name}"
+		"format": "{index}:{name}"
 	},
 
 	"clock#1": {
