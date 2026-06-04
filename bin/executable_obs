@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+cd ~/repos/shaun-garwood-notes
+nvim -c "NvimTreeOpen" -c "Obsidian today"
