@@ -69,6 +69,7 @@
       "Bash(gh auth status *)",
       "Bash(gh label list)",
       "Bash(gh label list *)",
+      "Bash(~/bin/ntfy*)",
       "mcp__claude_ai_Atlassian__getAccessibleAtlassianResources",
       "mcp__claude_ai_Atlassian__searchJiraIssuesUsingJql",
       "mcp__claude_ai_Atlassian__getJiraIssue",
@@ -118,6 +119,30 @@
       "mcp__datadog-mcp__aggregate_spans",
       "mcp__datadog-mcp__get_datadog_trace",
       "Bash(~/bin/ntfy*)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/csw/.config/zellij/plugins/zellaude-hook.sh"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/csw/.config/zellij/plugins/zellaude-hook.sh"
+          }
+        ]
+      }
     ]
   }
 }
