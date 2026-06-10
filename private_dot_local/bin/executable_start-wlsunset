@@ -1,0 +1,8 @@
+#!/bin/bash
+pkill -x wlsunset 2>/dev/null
+# wait for it to fully exit before starting a new instance
+if pgrep -x wlsunset >/dev/null; then
+    pkill -9 -x wlsunset 2>/dev/null
+    sleep 0.2
+fi
+exec wlsunset -l 39.7 -L -104.9 -t 2000 -T 6500
