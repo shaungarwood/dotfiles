@@ -8,9 +8,12 @@ OS=$(uname)
 
 case $OS in
   "Darwin")
-    echo "macOS: Skipping package installation (assumes Xcode CLI tools installed)"
-    # macOS typically has git from Xcode Command Line Tools
-    # brew installation handles other dependencies
+    echo "macOS: Installing essential packages via brew..."
+    if command -v brew >/dev/null 2>&1; then
+      brew install mosh
+    else
+      echo "Warning: Homebrew not found, skipping package installation"
+    fi
     ;;
 
   "Linux")
@@ -51,7 +54,8 @@ case $OS in
       dnsutils \
       traceroute \
       netcat-openbsd \
-      openssh-client
+      openssh-client \
+      mosh
 
     # Python essentials (for tooling/scripts)
     echo "Installing Python tools..."

@@ -27,7 +27,7 @@ output eDP-1 scale 1.25
 output * bg $background fill
 
 # Blue light filter (Denver, CO)
-exec ~/.local/bin/start-wlsunset
+exec ~/bin/start-wlsunset
 exec nm-applet --indicator
 
 ### Swaylock / Swayidle
@@ -39,7 +39,7 @@ bindswitch --locked lid:off exec swaymsg "output * dpms on"
 # Before suspend: ensure locked. After resume: restart wlsunset to re-apply color temp
 exec swayidle -w \
     before-sleep 'swaylock -f --image ~/Pictures/Wallpapers/current_lockscreen --ignore-empty-password --indicator-radius 200' \
-    after-resume '~/.local/bin/start-wlsunset'
+    after-resume '~/bin/start-wlsunset'
 
 ### Input configuration
 #
