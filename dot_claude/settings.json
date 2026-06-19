@@ -121,28 +121,6 @@
       "Bash(~/bin/ntfy*)"
     ]
   },
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/home/csw/.config/zellij/plugins/zellaude-hook.sh"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/home/csw/.config/zellij/plugins/zellaude-hook.sh"
-          }
-        ]
-      }
-    ]
-  }
+  "hooks": {}
+
 }
