@@ -35,6 +35,7 @@ return {
   config = function()
     -- Setup language servers using new vim.lsp.config API (nvim 0.11+)
     vim.lsp.config('ruby_lsp', {
+      capabilities = require('cmp_nvim_lsp').default_capabilities(),
       on_attach = function(client, buffer)
         print("LSP started.");
 
