@@ -21,3 +21,9 @@ test/
 .config/kitty
 .config/nvim-minimal
 {{- end }}
+
+# Work-repo LSP tuning: names internal repo details, dotfiles repo is public
+.config/nvim/lua/csw/ccapi.lua
+
+# Personal per-repo Claude notes: infra topology, ports, env var names
+.claude/ccapi-local.md
