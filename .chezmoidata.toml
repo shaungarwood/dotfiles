@@ -1,5 +1,5 @@
 [variables]
-  gui = false # Default false. Override to true in ~/.config/chezmoi/chezmoi.toml on GUI machines.
+  gui = false # Default. Real value comes from [data.variables] in ~/.config/chezmoi/chezmoi.toml
 
 [hostnames]
 personal = [ "distressed-phase", "chickadee" ]

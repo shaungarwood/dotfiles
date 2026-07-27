@@ -1,6 +1,11 @@
 [data]
     email = "shaun.garwood@gmail.com"
-    gui = {{ has .chezmoi.hostname .hostnames.personal }}
+
+# Must be [data.variables], not [data] -- templates read .variables.gui, which
+# comes from .chezmoidata.toml. A bare `gui` under [data] sets .gui instead and
+# silently overrides nothing.
+[data.variables]
+    gui = {{ not (has .chezmoi.hostname .hostnames.personal_remote) }}
 
 [diff]
     # Disable pager for cleaner diffs
