@@ -4,14 +4,18 @@ alias brails="bundle exec rails"
 alias bserver="bundle exec rails server"
 alias brspec="bundle exec rspec"
 alias brubocop="bundle exec rubocop"
+alias ccapi="cd ~/repos/ccapi/main"
 alias ccc="cocam console"
 alias cuf="cocam update fast"
 alias drake="dip rake"
+alias drr="dip compose restart rails"
 alias drspec="dip rspec"
   {{- end }}
 
 # personal laptop stuff
-  {{- if .variables.gui }}
+  {{- /* Linux desktop only: chromium and NetworkManager don't exist on macOS.
+         Gated on os, not .variables.gui -- gui is true on the Mac too. */}}
+  {{- if and .variables.gui (eq .chezmoi.os "linux") }}
 alias netflix="chromium --app=https://netflix.com"
 alias plex="chromium --app=https://app.plex.tv/desktop"
 alias nm-restart="sudo service NetworkManager restart"
