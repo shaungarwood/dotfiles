@@ -1,6 +1,9 @@
+# Links
+link-url = true
+
 # Font
 font-family = 0xProto Nerd Font
-font-size = 10
+font-size = 14
 
 # Window
 window-padding-x = 3
@@ -8,7 +11,7 @@ window-padding-y = 3
 gtk-titlebar = false
 
 # Background
-background-opacity = 0.97
+background-opacity = 0.94
 
 # Bell (disable audio)
 bell-features = no-system

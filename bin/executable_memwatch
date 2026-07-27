@@ -1,0 +1,270 @@
+#!/usr/bin/env bash
+# memwatch — sample swap/compressor pressure and top memory consumers.
+# Written to catch whatever's driving the 100%-compressor-segment /
+# watchdog-timeout kernel panics before the next one happens.
+#
+# Usage:
+#   memwatch            single snapshot (used by the memwatch LaunchAgent)
+#   memwatch --watch    loop every $MEMWATCH_INTERVAL seconds (default 30), foreground
+#
+# Env:
+#   MEMWATCH_INTERVAL        --watch sleep, seconds (default 30)
+#   MEMWATCH_NTFY            1/0, push alerts via ~/bin/ntfy (default 1)
+#   MEMWATCH_NTFY_COOLDOWN   seconds between repeat pushes at the same tier
+#                            (default 14400 = 4h). See the rate-limit block below.
+#
+# Incident log:
+#   2026-07-12 14:22-14:35 — compressor segments pinned at 100%
+#     (927289/927289) and swap at 36.1/36.86GB used for the ~10min prior,
+#     ALERT firing every sample. Reboot recorded at 14:35 (`last reboot`).
+#     /Library/Logs/DiagnosticReports/panic-full-2026-07-13-090504.000.panic
+#     confirms: "watchdog timeout: no checkins from watchdogd in 92 seconds".
+#     Top %mem process in nearly every sample leading up to it was
+#     com.apple.Virtualization.VirtualMachine (colima's Linux VM — colima/
+#     limactl were running), climbing 250MB->713MB RSS with CPU spiking to
+#     250-270%. No single process had outsized absolute RSS though, so this
+#     looked like broad system-wide pressure (colima VM + workload) filling
+#     swap rather than one classic leaker. Worth checking colima's VM memory
+#     config if this pattern repeats.
+#   2026-07-13 — remediation: upgraded colima 0.9.1->0.10.3, lima 2.0.3->2.1.4
+#     (fixes hostagent GuestAgentClient/inotify/gRPC tunnel leaks), docker
+#     29.1.5->29.6.1, docker-buildx 0.32.1->0.35.0. Dropped colima VM memory
+#     from 16GiB->14GiB in ~/.colima/default/colima.yaml.
+#   2026-07-20 09:47 — kernel panic, panic-full-2026-07-20-094718.000.panic:
+#     "userspace watchdog timeout: no successful checkins from WindowServer
+#     (1 induced crashes) in 121 seconds". The victim moved from watchdogd
+#     (07-12) to WindowServer, and the "1 induced crashes" means the watchdog
+#     already tried killing WindowServer once and the box STILL couldn't make
+#     progress, so it panicked. memoryStatus: compressor 18.78GB, free pages
+#     911 (= 14.6 MB free, on a 36GB machine), pagesWanted 3089 vs
+#     pagesReclaimed 2208 — the pageout path could not keep up with demand.
+#     Note the 07-13 colima/lima/docker upgrades + 16->14GiB VM did NOT prevent
+#     this. Dropping the VM ceiling only slows the ratchet.
+#   2026-07-26 08:47 — WindowServer watchdog kill (NOT a kernel panic, so
+#     `last reboot` shows nothing and uptime keeps counting — the machine just
+#     dumped the GUI session back to the login window; boot stayed Jul 20
+#     16:25). Report: DiagnosticReports/WindowServer-2026-07-26-084709.ips,
+#     bug_type 409, "unresponsive work processor(s): WindowServer main thread",
+#     40s since last checkin.
+#     Same root cause as 07-12, different victim. Proof it was memory and not
+#     a WindowServer bug: the ws_main_thread stackshot carries kThreadFaultedBT
+#     + kThreadTriedFaultBT + kThreadTruncUserBT, i.e. the kernel had to fault
+#     the main thread's OWN STACK back in from the compressor just to walk its
+#     backtrace, and still only got 3 user frames. The main thread wasn't
+#     spinning, it was paged out. postSampleVMStats at the hang:
+#       compressor            18.3GB resident, holding 93.8GB logical (5.1x)
+#       free                   1.7GB of 36GB
+#       swap                  36.1 / 36.86GB
+#       decompressions        11.08 BILLION  (compressions 11.18B)
+#     Last memwatch sample 08:40:44 read 100.0% segments — ALERT had been
+#     firing on EVERY 30s sample continuously since 07-25 09:00. ~24 hours of
+#     saturation, straight through the 03:00 restart window, and it never dipped.
+#
+#     WHY IT GOT THERE — two independent failures, both silent:
+#     1. ~/bin/colima-nightly-restart died before doing anything on 07-25 and
+#        07-26. launchd hands agents a bare PATH (/usr/bin:/bin:/usr/sbin:/sbin);
+#        `colima` shells out to `limactl` BY NAME, so it exited fatal with
+#        "lima not found, run 'brew install lima'" (lima was installed fine —
+#        just not on that PATH). With `set -e` the script then never reached
+#        `brew services restart`. 07-25 03:00 is the Friday-night run that was
+#        supposed to clear the weekend.
+#     2. Before that, the restart ran "successfully" 07-22/23/24 and STILL
+#        reclaimed nothing: on vmType vz the guest is a detached
+#        Virtualization.framework XPC process that outlives the `colima start
+#        -f` wrapper brew cycles. VM pid 21473 was alive from Jul 21 03:00
+#        through all three, while peak host swap ratcheted 0.1 -> 9.2 -> 8.1
+#        -> 21.7 -> 34.0 -> 35.5GB. Monotonic across every restart boundary.
+#     Both are now fixed in colima-nightly-restart (PATH export; graceful stop
+#     with --force fallback; and it verifies the VM pid is actually gone and
+#     logs ERROR if not, because the whole failure mode here was silence).
+#
+#     ALSO: containers are NOT shut down nightly. Nothing on this box does
+#     that — the only nightly job is colima-nightly-restart. At crash time
+#     31 containers across 3 concurrent stacks were up 3-5 days (companycam +
+#     two platb_123_* worktrees), incl. 3x elasticsearch AND 3x opensearch
+#     JVMs. Guest was 12Gi/13Gi used with ZERO guest swap, so it cannot
+#     reclaim internally — every dirty guest page has to be held by the host,
+#     which is why 14GiB of VM turns into 93.8GB of logical compressor load.
+#     A working `colima stop` does stop the containers (only the 9 mongo
+#     sidecars carry restart:always, ~75MB each), so no separate docker
+#     teardown is needed — but running 3 full stacks at once is the actual
+#     load driver and the nightly restart is only a floor, not a fix: it resets
+#     the accumulation nightly without slowing the daily climb, so a heavy day
+#     can still cross 100% hours before 03:00 comes around.
+#   2026-07-27 — remediation: ES/OpenSearch no longer start in any ccapi stack
+#     (~4.5GB of the 14GiB VM reclaimed, 6 JVMs -> 0). Implemented as symlinks
+#     to ~/.config/cocam/{no-search.yml,dip.override.yml}, nothing changed in
+#     the repo. Mechanics, gotchas, and the dead-ELASTICSEARCH_URL trap are
+#     documented in ~/.claude/ccapi-local.md (reachable as CLAUDE.local.md from
+#     every worktree). Re-enable per stack: docker compose --profile search up.
+#
+#     TRIAGE CHEATSHEET for next time:
+#       tail ~/Library/Logs/colima-restart/colima-restart.log   # did it run AND reclaim?
+#       ps -o pid,lstart,rss -p $(pgrep -f Virtualization.VirtualMachine)
+#       docker ps --format '{{.Names}}' | sed -E 's/-[a-z0-9]+-[0-9]+$//' | sort -u
+#       grep -c ALERT ~/Library/Logs/memwatch/memwatch.log
+#     Peak seg%/swap per day (the ratchet is the tell):
+#       awk '/^=== /{d=$2} /compressor_segments/{split($3,a,"(");print d,a[2]}' \
+#         ~/Library/Logs/memwatch/memwatch.log | sort -u -k1,1 -k2,2gr | sort -u -k1,1
+#
+#     KNOWN CEILING: this box dies when the compressor reaches ~18.3-18.8GB
+#     resident (07-20: 18.78GB, 07-26: 18.32GB) and swap fills 36/36.86GB.
+#     100% of vm.compressor.segment.limit == ~18.5GB == crash. That's what the
+#     90% ALERT threshold below is buying lead time on. Cadence so far is
+#     roughly weekly: 07-12, 07-20, 07-26 — it tracks days-since-VM-restart
+#     and number-of-stacks-up, not calendar.
+
+set -euo pipefail
+
+LOG_DIR="${HOME}/Library/Logs/memwatch"
+LOG_FILE="${LOG_DIR}/memwatch.log"
+MAX_LOG_BYTES=$((20 * 1024 * 1024))
+INTERVAL="${MEMWATCH_INTERVAL:-30}"
+
+# --- push notification (ntfy) -------------------------------------------------
+# The 07-26 crash had ~24h of continuous 100% ALERTs sitting unread in this log.
+# Alerting is only useful if it reaches a phone, but this script runs every 30s
+# so naive notify-on-alert would have sent ~2,850 messages for that one event.
+# Rate limiting is therefore the whole design:
+#   * hysteresis      — fire at >=90%, only clear below 85%, so it can't flap
+#                       across the boundary and double-notify.
+#   * tier escalation — WARN 90 / HIGH 95 / CRIT 99. Crossing UP always notifies
+#                       immediately (that's new information). Staying put does not.
+#   * cooldown        — otherwise at most one nag per MEMWATCH_NTFY_COOLDOWN.
+#   * one recovery    — a single "recovered" message when it drops under 85%.
+# Worst case for a 24h pinned event: 3 escalations + ~6 nags + 1 recovery = ~10.
+# Set MEMWATCH_NTFY=0 to silence entirely; cooldown is in seconds.
+NTFY_BIN="${HOME}/bin/ntfy"
+NTFY_ENV="${HOME}/.ntfy.env"
+STATE_FILE="${LOG_DIR}/.ntfy-state"
+NTFY_ENABLED="${MEMWATCH_NTFY:-1}"
+COOLDOWN="${MEMWATCH_NTFY_COOLDOWN:-14400}"   # 4h
+WARN_PCT=90
+HIGH_PCT=95
+CRIT_PCT=99
+CLEAR_PCT=85
+
+mkdir -p "$LOG_DIR"
+
+tier_for() {
+  awk -v p="$1" -v w=$WARN_PCT -v h=$HIGH_PCT -v c=$CRIT_PCT 'BEGIN{
+    if (p>=c) print 3; else if (p>=h) print 2; else if (p>=w) print 1; else print 0 }'
+}
+tier_name() { case "$1" in 3) echo CRITICAL;; 2) echo HIGH;; 1) echo WARN;; *) echo OK;; esac; }
+
+# Push, but never at the cost of the sampler: no credentials means ntfy would
+# block on an interactive prompt under launchd, and any curl failure must not
+# trip `set -e` and kill the snapshot loop.
+push() {
+  local title="$1" prio="$2" tags="$3" body="$4"
+  [[ "$NTFY_ENABLED" == "1" ]] || return 0
+  [[ -x "$NTFY_BIN" && -f "$NTFY_ENV" ]] || return 0
+  NTFY_TITLE="$title" NTFY_PRIORITY="$prio" NTFY_TAGS="$tags" \
+    "$NTFY_BIN" "$body" >/dev/null 2>&1 || true
+}
+
+# How long the colima VM has been up — the single most actionable number in the
+# alert, since "restart colima" is the fix ~every time.
+vm_age() {
+  local pid
+  pid=$(pgrep -f 'com.apple.Virtualization.VirtualMachine' 2>/dev/null | head -1) || true
+  [[ -n "$pid" ]] && ps -o etime= -p "$pid" 2>/dev/null | tr -d ' ' || echo "none"
+}
+
+maybe_notify() {
+  local ts="$1" seg_pct="$2" swap="$3" top_proc="$4"
+  local tier last_tier last_ts now reason swap_used
+
+  tier=$(tier_for "$seg_pct")
+  last_tier=0; last_ts=0
+  if [[ -f "$STATE_FILE" ]]; then
+    read -r last_tier last_ts < "$STATE_FILE" 2>/dev/null || { last_tier=0; last_ts=0; }
+    [[ "$last_tier" =~ ^[0-9]+$ ]] || last_tier=0
+    [[ "$last_ts"   =~ ^[0-9]+$ ]] || last_ts=0
+  fi
+  now=$(date +%s)
+
+  # Recovery: only once, and only after real headroom returns (hysteresis).
+  if awk -v p="$seg_pct" -v c=$CLEAR_PCT 'BEGIN{exit !(p<c)}'; then
+    if [[ "$last_tier" -gt 0 ]]; then
+      push "memwatch recovered" 2 "white_check_mark" \
+        "Compressor back down to ${seg_pct}% (was $(tier_name "$last_tier")). Host is out of panic range."
+      echo "NOTIFY ${ts}: recovered (${seg_pct}%)" >> "$LOG_FILE"
+      echo "0 $now" > "$STATE_FILE"
+    fi
+    # Nothing to reset when we were already clear — don't rewrite state on every
+    # one of the ~2,880 healthy samples we take per day.
+    return 0
+  fi
+
+  [[ "$tier" -eq 0 ]] && return 0   # in the 85-90% dead band: track nothing, say nothing
+
+  if [[ "$tier" -gt "$last_tier" ]]; then
+    reason="escalated to $(tier_name "$tier")"
+  elif (( now - last_ts >= COOLDOWN )); then
+    reason="still $(tier_name "$tier")"
+  else
+    return 0                        # same tier, inside cooldown — stay quiet
+  fi
+
+  swap_used=$(awk '{for(i=1;i<=NF;i++) if($i=="used"){print $(i+2); exit}}' <<<"$swap")
+  push "memwatch: $(tier_name "$tier") ${seg_pct}%" \
+       "$([[ "$tier" -ge 3 ]] && echo 5 || echo 4)" \
+       "$([[ "$tier" -ge 3 ]] && echo rotating_light || echo warning)" \
+       "compressor ${seg_pct}% of limit (crash at 100%), swap used ${swap_used:-?}
+colima VM up: $(vm_age)
+top: ${top_proc}
+fix: ~/bin/colima-nightly-restart"
+  echo "NOTIFY ${ts}: ${reason} — sent push (${seg_pct}%)" >> "$LOG_FILE"
+  echo "$tier $now" > "$STATE_FILE"
+}
+
+rotate_if_needed() {
+  if [[ -f "$LOG_FILE" ]] && [[ $(stat -f%z "$LOG_FILE") -gt $MAX_LOG_BYTES ]]; then
+    mv -f "$LOG_FILE" "${LOG_FILE}.1"
+  fi
+}
+
+snapshot() {
+  local ts free_pct seg_total seg_limit seg_pct swap top_procs
+
+  ts=$(date '+%Y-%m-%d %H:%M:%S')
+  free_pct=$(memory_pressure -Q 2>/dev/null | awk -F': ' '/free percentage/{print $2}')
+  seg_total=$(sysctl -n vm.compressor.segment.total)
+  seg_limit=$(sysctl -n vm.compressor.segment.limit)
+  seg_pct=$(awk -v t="$seg_total" -v l="$seg_limit" 'BEGIN{ if (l>0) printf "%.1f", (t/l)*100; else print "0" }')
+  swap=$(sysctl -n vm.swapusage)
+  top_procs=$(ps -Ao pid,pcpu,pmem,rss,comm -m | awk 'NR>1 && NR<=6')
+
+  {
+    echo "=== $ts ==="
+    echo "free_mem_pct: ${free_pct:-unknown}"
+    echo "compressor_segments: ${seg_total}/${seg_limit} (${seg_pct}%)"
+    echo "swap: ${swap}"
+    echo "top by %mem:"
+    echo "$top_procs"
+    echo
+  } >> "$LOG_FILE"
+
+  # This is the exact metric that reads "100% of segments limit (BAD)" in the
+  # panic logs right before a watchdog-timeout crash — flag it so it's easy to grep.
+  if awk -v p="$seg_pct" -v w=$WARN_PCT 'BEGIN{exit !(p>=w)}'; then
+    echo "ALERT ${ts}: compressor segments at ${seg_pct}% — panic precursor territory" >> "$LOG_FILE"
+  fi
+
+  # ALERT above stays every-sample (it's the forensic record we reconstructed the
+  # 07-26 timeline from). maybe_notify is the rate-limited human-facing half.
+  maybe_notify "$ts" "$seg_pct" "$swap" "$(head -1 <<<"$top_procs" | awk '{print $NF}' | xargs basename 2>/dev/null || echo unknown)"
+}
+
+rotate_if_needed
+
+if [[ "${1:-}" == "--watch" ]]; then
+  echo "watching every ${INTERVAL}s -> ${LOG_FILE} (ctrl-c to stop)"
+  while true; do
+    snapshot
+    sleep "$INTERVAL"
+  done
+else
+  snapshot
+fi

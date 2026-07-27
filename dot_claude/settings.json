@@ -1,5 +1,4 @@
 {
-  "voiceEnabled": true,
   "permissions": {
     "allow": [
       "WebFetch",
@@ -91,6 +90,41 @@
       "mcp__claude_ai_Atlassian__getConfluencePageFooterComments",
       "mcp__claude_ai_Atlassian__getConfluencePageInlineComments",
       "mcp__claude_ai_Atlassian__getConfluenceCommentChildren",
+      "mcp__claude_ai_Atlassian__fetch",
+      "mcp__claude_ai_Atlassian__search",
+      "mcp__claude_ai_Atlassian__getCompassComponent",
+      "mcp__claude_ai_Atlassian__getCompassComponents",
+      "mcp__claude_ai_Atlassian__getCompassCustomFieldDefinitions",
+      "mcp__claude_ai_Atlassian__getTeamworkGraphContext",
+      "mcp__claude_ai_Atlassian__getTeamworkGraphObject",
+      "mcp__claude_ai_Linear__get_issue",
+      "mcp__claude_ai_Linear__get_issue_status",
+      "mcp__claude_ai_Linear__get_project",
+      "mcp__claude_ai_Linear__get_team",
+      "mcp__claude_ai_Linear__get_user",
+      "mcp__claude_ai_Linear__get_document",
+      "mcp__claude_ai_Linear__get_initiative",
+      "mcp__claude_ai_Linear__get_milestone",
+      "mcp__claude_ai_Linear__get_status_updates",
+      "mcp__claude_ai_Linear__get_attachment",
+      "mcp__claude_ai_Linear__get_diff",
+      "mcp__claude_ai_Linear__get_diff_threads",
+      "mcp__claude_ai_Linear__list_issues",
+      "mcp__claude_ai_Linear__list_projects",
+      "mcp__claude_ai_Linear__list_teams",
+      "mcp__claude_ai_Linear__list_users",
+      "mcp__claude_ai_Linear__list_comments",
+      "mcp__claude_ai_Linear__list_cycles",
+      "mcp__claude_ai_Linear__list_documents",
+      "mcp__claude_ai_Linear__list_initiatives",
+      "mcp__claude_ai_Linear__list_issue_labels",
+      "mcp__claude_ai_Linear__list_issue_statuses",
+      "mcp__claude_ai_Linear__list_milestones",
+      "mcp__claude_ai_Linear__list_project_labels",
+      "mcp__claude_ai_Linear__list_customers",
+      "mcp__claude_ai_Linear__list_diffs",
+      "mcp__claude_ai_Linear__search_documentation",
+      "mcp__claude_ai_Linear__extract_images",
       "mcp__claude_ai_Slack__slack_read_canvas",
       "mcp__claude_ai_Slack__slack_read_channel",
       "mcp__claude_ai_Slack__slack_read_thread",
@@ -118,9 +152,24 @@
       "mcp__datadog-mcp__search_datadog_spans",
       "mcp__datadog-mcp__aggregate_spans",
       "mcp__datadog-mcp__get_datadog_trace",
+      "mcp__circleci__get_build_failure_logs",
+      "mcp__circleci__find_flaky_tests",
+      "mcp__circleci__get_latest_pipeline_status",
+      "mcp__circleci__config_helper",
+      "mcp__circleci__analyze_resource_usage",
       "Bash(~/bin/ntfy*)"
+    ],
+    "deny": [
+      "Bash(gh pr comment *)",
+      "Bash(gh issue comment *)",
+      "Bash(gh pr review *)"
     ]
   },
-  "hooks": {}
-
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
+  "voiceEnabled": true,
+  "enabledPlugins": {
+    "ruby-lsp@claude-plugins-official": true
+  }
 }

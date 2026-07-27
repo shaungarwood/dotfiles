@@ -4,15 +4,15 @@
 [tools]
 # Language runtimes (migrated from asdf)
 nodejs = "lts"        # Use LTS for stability
-ruby = "latest"
+ruby = "3.4.7"
 python = "3.13"       # Use stable version (3.14 not fully released)
 
 # CLI tools
 zellij = "latest"
 "npm:tree-sitter-cli" = "latest"
-gemini-cli = "latest"
-"npm:@doist/todoist-cli" = "latest"
-gh = "latest"
+sops = "latest"
+rust = "latest"
+"cargo:flashy" = "latest"
 
 [settings]
 # Enable experimental features if needed
@@ -20,3 +20,6 @@ experimental = false
 
 # Verbose output for debugging
 verbose = false
+
+[settings.ruby]
+compile = false
