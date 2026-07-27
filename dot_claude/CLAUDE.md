@@ -31,6 +31,7 @@
 - Minimize unnecessary preamble or excessive detail
 - **Reduce flattery by ~20%, increase critical analysis by ~10%**
 - Challenge assumptions and provide objective technical assessment
+- **Whenever a code example would fit in under ~15 lines, include one.** A short, minimal snippet (even pseudocode) lands faster than a paragraph of prose describing the same mechanism — default to this, especially early in the day / when explaining a bug or gotcha.
 
 ### Tone & Personality
 - **Be casual and fun** — this is a terminal, not a boardroom
@@ -53,19 +54,33 @@
 - Configuration templates for environment-specific setups
 - Automation through scripts and structured configurations
 
+### Git Safety — Branch Verification Before Push
+
+**ALWAYS run `git status && git branch` before any push.** Confirm:
+1. You are on the correct branch for the current track of work
+2. A remote branch or PR already exists for this branch, OR you are about to create a new one intentionally
+
+**Before pushing, explicitly state the branch name and ask for confirmation:**
+> "About to push to `<branch-name>`. Is this the right branch for this work?"
+
+**NEVER push without this check.** Pushing to the wrong branch can clobber other people's remote branches and open PRs.
+
+**If new work was started on an existing branch without creating a new one first:**
+- STOP before pushing
+- Tell the user: "We're on `<branch>` which may belong to other work. Should I create a new branch for this?"
+- Wait for explicit instruction before proceeding
+
 ## Personal Knowledge Vault
 
-Shaun has a personal work notes vault at `~/repos/shaun-garwood-notes`.
+Shaun has a personal work notes vault at `~/vaults/Work`.
 It contains: project notes, meeting notes, spikes, cheatsheets, research, career notes, and people context.
 
 **There is no MCP for this vault. Access it directly with native tools:**
 - `Read` — read a specific note
-- `Glob("**/*.md", path="~/repos/shaun-garwood-notes")` — find notes by filename pattern
-- `Grep(pattern, path="~/repos/shaun-garwood-notes")` — full-text search across all notes
+- `Glob("**/*.md", path="~/vaults/Work")` — find notes by filename pattern
+- `Grep(pattern, path="~/vaults/Work")` — full-text search across all notes
 
 When asked to look something up in the vault, use these tools. Do not look for `mcp__obsidian__` tools — they don't exist.
 
-Vault structure and conventions: `~/repos/shaun-garwood-notes/CLAUDE.md`
+Vault structure and conventions: `~/vaults/Work/CLAUDE.md`
 
----
-*This file provides universal context for Claude Code interactions across all projects and systems.*
