@@ -15,9 +15,14 @@ lazydocker = "latest"
 gemini-cli = "latest"
 "npm:@doist/todoist-cli" = "latest"
 gh = "latest"
+{{ if has .chezmoi.hostname .hostnames.work -}}
 sops = "latest"
 rust = "latest"
+# Gated with rust, not independently: the cargo: backend builds from source and
+# needs the toolchain above, so listing it on a host without rust makes
+# `mise install` fail rather than skip.
 "cargo:flashy" = "latest"
+{{- end }}
 
 [settings]
 # Enable experimental features if needed
