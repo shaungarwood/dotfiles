@@ -48,4 +48,9 @@ test/
 # The weekly-update skill is deliberately absent here: it names an internal
 # repo and a Slack user id, so it is not tracked in this public repo at all.
 .claude/skills/people
+.claude/skills/career-note
+
+# memwatch diagnoses the compressor/swap kernel panics on the work laptop and
+# is driven by a macOS LaunchAgent that only exists there.
+bin/memwatch
 {{- end }}
