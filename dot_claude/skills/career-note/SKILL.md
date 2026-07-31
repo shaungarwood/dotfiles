@@ -4,7 +4,7 @@ description: Quickly capture a win, piece of feedback, or accomplishment to care
 ---
 
 Append a timestamped career capture to the running log at
-`/Users/shaungarwood/repos/shaun-garwood-notes/career/captures.md`.
+`/Users/shaungarwood/vaults/Work/career/captures.md`.
 
 ## Step 1 — Get the note text
 

@@ -5,7 +5,7 @@ description: Look up, create, or add notes to a person's file in the vault's peo
 
 Manage notes in the vault's `people/` directory.
 
-Vault path: `/Users/shaungarwood/repos/shaun-garwood-notes`
+Vault path: `/Users/shaungarwood/vaults/Work`
 People dir: `people/`
 
 ---
