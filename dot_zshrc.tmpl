@@ -43,10 +43,12 @@ autoload -U +X bashcompinit && bashcompinit # autocomplete and syntax highlighti
 export MISE_IGNORED_CONFIG_PATHS="$HOME/.local/share/chezmoi"
 eval "$(mise activate zsh)"
 
+{{ if not (has .chezmoi.hostname .hostnames.personal_remote) -}}
 # Zellij: start a new session per terminal (use Ctrl+O → w to attach to existing)
 if [[ -z "$ZELLIJ" ]]; then
   zellij
 fi
+{{- end }}
 
 # OS specific stuff
   {{- if eq .chezmoi.os "darwin" }}
