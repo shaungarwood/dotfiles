@@ -41,3 +41,11 @@ test/
 
 # Shell secrets: tokens/API keys, never tracked (dotfiles repo is public)
 .config/zsh/secrets.zsh
+
+{{ if not (has .chezmoi.hostname .hostnames.work) -}}
+# Work-only Claude skills. These read the work notes vault at ~/vaults/Work,
+# which only exists on work machines, so they are dead weight elsewhere.
+# The weekly-update skill is deliberately absent here: it names an internal
+# repo and a Slack user id, so it is not tracked in this public repo at all.
+.claude/skills/people
+{{- end }}
