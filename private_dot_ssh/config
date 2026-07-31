@@ -1,3 +1,5 @@
+Include ~/.colima/ssh_config
+
 Host work-mac
     User shaun.garwood
     HostName work-mac.tail3e170e.ts.net

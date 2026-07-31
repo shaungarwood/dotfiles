@@ -6,18 +6,38 @@ Vagrantfile
 test/
 
 {{ if not .variables.gui -}}
-# Ignore GUI-related configurations and scripts if 'gui' is false
+# Headless machines get no desktop config at all.
+.config/kitty
+.config/ghostty
 .config/sway
 .config/run_once_before_sway.sh.tmpl
 .config/waybar
-.config/kitty
-.config/ghostty
 .local/bin/lock-screen.sh
 .local/bin/ronema
+.local/bin/start-wlsunset
+{{- end }}
+
+{{ if ne .chezmoi.os "linux" -}}
+# Wayland-only: sway, waybar, swaylock, wlsunset and an nmcli wrapper. A GUI
+# machine can still be a Mac, so these need an OS gate on top of the gui one.
+.config/sway
+.config/run_once_before_sway.sh.tmpl
+.config/waybar
+.local/bin/lock-screen.sh
+.local/bin/ronema
+.local/bin/start-wlsunset
 {{- end }}
 
 {{ if has .chezmoi.hostname .hostnames.personal_remote -}}
 # Skip on remote servers
-.config/kitty
 .config/nvim-minimal
 {{- end }}
+
+# Work-repo LSP tuning: names internal repo details, dotfiles repo is public
+.config/nvim/lua/csw/ccapi.lua
+
+# Personal per-repo Claude notes: infra topology, ports, env var names
+.claude/ccapi-local.md
+
+# Shell secrets: tokens/API keys, never tracked (dotfiles repo is public)
+.config/zsh/secrets.zsh

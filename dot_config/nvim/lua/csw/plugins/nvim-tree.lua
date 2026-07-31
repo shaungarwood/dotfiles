@@ -20,6 +20,12 @@ return {
         relativenumber = true,
       },
       hijack_cursor = true,
+      -- Keep the tree's cursor parked on whatever file you're editing, and expand
+      -- the folders leading to it. Answers "where am I?" whenever the tree is open.
+      update_focused_file = {
+        enable = true,
+        update_root = false, -- don't let the tree wander the cwd out from under telescope
+      },
       -- change folder arrow icons
       renderer = {
         icons = {

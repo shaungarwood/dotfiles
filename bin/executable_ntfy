@@ -40,5 +40,14 @@ fi
 
 NTFY_URL="https://ntfy.duck.bar/${NTFY_TOPIC}"
 
-curl -fsS -u "${NTFY_USER}:${NTFY_PASS}" -d "${MESSAGE}" "${NTFY_URL}" > /dev/null
+# Optional, set by callers via env (all backwards compatible — unset = omitted).
+hdrs=()
+[[ -n "${NTFY_TITLE:-}" ]]    && hdrs+=(-H "Title: ${NTFY_TITLE}")
+[[ -n "${NTFY_PRIORITY:-}" ]] && hdrs+=(-H "Priority: ${NTFY_PRIORITY}")
+[[ -n "${NTFY_TAGS:-}" ]]     && hdrs+=(-H "Tags: ${NTFY_TAGS}")
+
+# -m 15: never let a wedged connection hang the caller. memwatch invokes this
+# from a 30s LaunchAgent, so an unbounded curl would pile up processes.
+curl -fsS -m 15 -u "${NTFY_USER}:${NTFY_PASS}" \
+  "${hdrs[@]}" -d "${MESSAGE}" "${NTFY_URL}" > /dev/null
 echo "sent: ${MESSAGE}"

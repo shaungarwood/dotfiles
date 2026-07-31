@@ -12,6 +12,8 @@ path+=("$HOME/.local/bin")
 path+=("$HOME/bin")
 source "$HOME/.aliases"
 
+[ -f "$HOME/.config/zsh/secrets.zsh" ] && source "$HOME/.config/zsh/secrets.zsh"
+
 # Defaults
 export EDITOR='nvim'
 export TERM='xterm-256color'
@@ -19,7 +21,7 @@ export TERM='xterm-256color'
   {{- if has .chezmoi.hostname .hostnames.work }}
 # Work stuff
 eval "$(rbenv init -)" # cocam isn't too smart
-source ~/.dev_setup_rc
+[ -f ~/.dev_setup_rc ] && source ~/.dev_setup_rc
   {{- end }}
 
 # Oh My ZSH stuff
@@ -29,7 +31,7 @@ ZSH_THEME="kardan"
   {{- else if has .chezmoi.hostname .hostnames.personal_remote }}
 ZSH_THEME="xxf"
   {{- else if has .chezmoi.hostname .hostnames.work }}
-ZSH_THEME="afowler"
+ZSH_THEME="robbyrussell"
   {{- else }}
 ZSH_THEME="robbyrussell"
   {{- end }}
