@@ -1,2 +1,5 @@
 Vagrantfile
 .vagrant
+
+# macOS LaunchAgents: hardcoded /Users paths, machine-specific
+Library/
