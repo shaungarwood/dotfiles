@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# hermes-tui — open the Hermes Agent TUI, from anywhere on the tailnet.
+#
+# The TUI talks JSON-RPC over *stdio* to a local `python -m tui_gateway.entry`
+# child, so it can't point at a remote host over the network. The only way to
+# get it is to have a terminal on the box running the container. This script
+# handles that: run it on magpie and it execs straight in; run it anywhere
+# else and it hops over SSH first.
+#
+#   hermes-tui                  # TUI, fresh session
+#   hermes-tui -c               # continue most recent session
+#   hermes-tui --cli            # plain CLI instead of the Ink TUI
+#   hermes-tui -q 'what's up'   # one-shot, non-interactive
+#
+# Env overrides:
+#   HERMES_HOST=magpie          target host (also the hostname we match on)
+#   HERMES_CONTAINER=hermes     docker container name
+
+set -euo pipefail
+
+HOST="${HERMES_HOST:-magpie}"
+CONTAINER="${HERMES_CONTAINER:-hermes}"
+
+die() { printf '\033[31mhermes-tui:\033[0m %s\n' "$*" >&2; exit 1; }
+
+# Single-quote an argument for safe transport through the remote shell.
+quote() { printf "'%s'" "${1//\'/\'\\\'\'}"; }
+
+# --- are we on the box? -------------------------------------------------
+# Compare short hostnames so magpie.local / magpie.tailnet.ts.net still match.
+here="$(hostname -s 2>/dev/null || hostname)"
+if [[ "${here%%.*}" == "${HOST%%.*}" ]]; then
+  ON_HOST=1
+else
+  ON_HOST=0
+fi
+
+# --- build the hermes argv ----------------------------------------------
+# Default to --tui; if the caller passed their own mode flag, don't fight them.
+args=("$@")
+mode_set=0
+for a in "${args[@]:-}"; do
+  case "$a" in --tui|--cli|-q|--query) mode_set=1 ;; esac
+done
+(( mode_set )) || args+=(--tui)
+
+if (( ON_HOST )); then
+  command -v docker >/dev/null 2>&1 || die "docker not found on $here"
+
+  status="$(docker inspect -f '{{.State.Status}}' "$CONTAINER" 2>/dev/null)" \
+    || die "no container named '$CONTAINER' (docker ps -a to check)"
+  [[ "$status" == running ]] \
+    || die "container '$CONTAINER' is $status — try: docker start $CONTAINER"
+
+  # -it needs a real terminal on both ends; -q/--query runs fine without one.
+  if [[ -t 0 && -t 1 ]]; then
+    exec docker exec -it "$CONTAINER" hermes chat "${args[@]}"
+  else
+    exec docker exec "$CONTAINER" hermes chat "${args[@]}"
+  fi
+fi
+
+# --- remote: hop to the host, then re-run ourselves ----------------------
+command -v ssh >/dev/null 2>&1 || die "ssh not found"
+
+remote="docker exec -it $(quote "$CONTAINER") hermes chat"
+for a in "${args[@]:-}"; do remote+=" $(quote "$a")"; done
+
+# -t forces a PTY so the Ink TUI gets a real terminal on the far side.
+exec ssh -t "$HOST" "$remote"
