@@ -20,10 +20,14 @@ gh = "latest"
 # not put on work Macs by default, that's a policy call to make deliberately.
 #
 # exe=antigravity: the release tarball ships a single binary named `antigravity`.
-# rename_exe=agy:  expose it as `agy`, which is both what Google's own installer
-#                  calls it and what keeps it from shadowing /usr/bin/antigravity,
-#                  the IDE launcher the .deb symlinks in (see
-#                  .chezmoiscripts/run_once_after_antigravity_ide.sh.tmpl).
+# rename_exe=agy:  expose it as `agy`, matching what Google's own install.sh
+#                  calls it. Also keeps the name free: the Antigravity IDE is a
+#                  separate product whose .deb claims /usr/bin/antigravity, so an
+#                  un-renamed shim here would silently shadow its launcher.
+#
+# Auth note: `agy` stores OAuth creds in the Secret Service (GNOME keyring), so
+# on headless boxes it cannot persist a login -- those use GEMINI_API_KEY with
+# modelProvider=gemini instead. See ~/.config/zsh/secrets.zsh (untracked).
 "github:google-antigravity/antigravity-cli" = { version = "latest", exe = "antigravity", rename_exe = "agy" }
 {{- end }}
 {{- if has .chezmoi.hostname .hostnames.work }}
