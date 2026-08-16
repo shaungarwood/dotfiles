@@ -15,7 +15,18 @@ lazydocker = "latest"
 gemini-cli = "latest"
 "npm:@doist/todoist-cli" = "latest"
 gh = "latest"
-{{ if has .chezmoi.hostname .hostnames.work -}}
+{{ if not (has .chezmoi.hostname .hostnames.work) -}}
+# Antigravity CLI (Google's terminal coding agent). Personal machines only --
+# not put on work Macs by default, that's a policy call to make deliberately.
+#
+# exe=antigravity: the release tarball ships a single binary named `antigravity`.
+# rename_exe=agy:  expose it as `agy`, which is both what Google's own installer
+#                  calls it and what keeps it from shadowing /usr/bin/antigravity,
+#                  the IDE launcher the .deb symlinks in (see
+#                  .chezmoiscripts/run_once_after_antigravity_ide.sh.tmpl).
+"github:google-antigravity/antigravity-cli" = { version = "latest", exe = "antigravity", rename_exe = "agy" }
+{{- end }}
+{{- if has .chezmoi.hostname .hostnames.work }}
 sops = "latest"
 rust = "latest"
 # Gated with rust, not independently: the cargo: backend builds from source and
