@@ -22,6 +22,15 @@ alias nm-restart="sudo service NetworkManager restart"
   {{- end }}
 alias vc="veracrypt -t -k '' --pim=0 --protect-hidden=no"
 
+  {{- /* Headless boxes bill agy against a metered API key rather than the
+         laptop's OAuth plan, so default them to flash. agy has no config key
+         for this -- `model`/`defaultModel` in settings.json and
+         CASCADE_DEFAULT_MODEL_OVERRIDE are all ignored, only the flag works.
+         Use `command agy` to get the pro default back for a one-off. */}}
+  {{- if has .chezmoi.hostname .hostnames.personal_remote }}
+alias agy="agy --model gemini-3.6-flash"
+  {{- end }}
+
 # universal stuff
 alias c=clear
 alias cm="chezmoi -v"
