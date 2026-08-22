@@ -1,0 +1,29 @@
+#!/bin/bash
+# Give workspaces their default "N:name" at sway startup.
+# Wired into the sway config with `exec` (login only -- not on reload, so a
+# workspace you rename by hand mid-session stays renamed).
+#
+# Sway's execs can fire before the initial workspace exists, so poll briefly
+# instead of firing once and losing the race.
+
+# workspace number -> default name
+declare -A defaults=(
+  [1]=main
+)
+
+for num in "${!defaults[@]}"; do
+    target="${num}:${defaults[$num]}"
+    for _ in $(seq 25); do
+        ws=$(swaymsg -t get_workspaces)
+        # Bare "N" -- ours to name.
+        if jq -e --arg n "$num" '.[] | select(.name == $n)' <<<"$ws" >/dev/null; then
+            swaymsg "rename workspace \"$num\" to \"$target\"" >/dev/null
+            break
+        fi
+        # Already carries a name -- leave it alone.
+        if jq -e --argjson n "$num" '.[] | select(.num == $n)' <<<"$ws" >/dev/null; then
+            break
+        fi
+        sleep 0.2
+    done
+done

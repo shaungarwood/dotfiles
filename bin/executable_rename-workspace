@@ -1,24 +1,47 @@
 #!/bin/bash
-# Rename the current sway workspace.
+# Rename the current sway workspace, keeping its number as an "N:" prefix.
 # Bound to Mod+Shift+w in sway config.
+#
+# Sway derives a workspace's number from the LEADING digits of its name, so the
+# number must be the very first character: "3:mipy" -> num 3.  A leading dot
+# (".3.mipy") makes num -1, which silently breaks every "workspace number N"
+# and "move container to workspace number N" binding.
 
-current_num=$(swaymsg -t get_workspaces | python3 -c "
-import sys, json
-ws = json.load(sys.stdin)
-w = next(x for x in ws if x['focused'])
-print(w.get('num', ''))
-")
+trim() {
+    local s="$1"
+    s="${s#"${s%%[![:space:]]*}"}"
+    s="${s%"${s##*[![:space:]]}"}"
+    printf '%s' "$s"
+}
+
+current_num=$(swaymsg -t get_workspaces | jq -r '
+  .[] | select(.focused) |
+  if .num > 0 then .num
+  else ((.name | capture("^[^0-9]*(?<n>[0-9]+)") | .n) // empty)
+  end
+')
 
 if [ -n "$1" ]; then
-    new_name="$1"
+    input_name="$1"
 else
-    new_name=$(echo "" | wofi --dmenu --prompt "Rename workspace:" --width 400 --height 50 --lines 0)
+    input_name=$(echo "" | wofi --dmenu --prompt "Rename workspace:" --width 400 --height 50 --lines 0)
 fi
 
-[ -z "$new_name" ] && exit 0
+input_name=$(trim "$input_name")
+[ -z "$input_name" ] && exit 0
 
-if [[ "$current_num" =~ ^[0-9]+$ ]] && [[ "$new_name" != "$current_num":* ]]; then
-    new_name="${current_num}:${new_name}"
+if [[ "$current_num" =~ ^[0-9]+$ ]]; then
+    # Drop a prefix the user typed themselves, so prefixes never stack.
+    # Matches "3", ".3.", "3:", "3-", "3 " -- the number must be followed by a
+    # separator or end of string, so "3d-modeling" is left alone.
+    rest=$(trim "$(sed -E "s/^\.?${current_num}([.:[:space:]-]+|\$)//" <<<"$input_name")")
+    if [ -n "$rest" ]; then
+        new_name="${current_num}:${rest}"
+    else
+        new_name="$current_num"
+    fi
+else
+    new_name="$input_name"
 fi
 
 swaymsg "rename workspace to \"$new_name\""
