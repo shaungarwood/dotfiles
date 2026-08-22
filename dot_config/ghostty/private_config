@@ -36,25 +36,4 @@ quick-terminal-animation-duration = 0.2
 quick-terminal-screen = main
 # keybind = ctrl+`=toggle_quick_terminal  # add once key syntax confirmed
 
-# Colors - Adapta Nokto Maia
-background = #222D31
-foreground = #d8d8d8
-selection-background = #2B2C2B
-selection-foreground = #16A085
-
-palette = 0=#222D31
-palette = 1=#ab4642
-palette = 2=#7E807E
-palette = 3=#f7ca88
-palette = 4=#7cafc2
-palette = 5=#ba8baf
-palette = 6=#1ABB9B
-palette = 7=#d8d8d8
-palette = 8=#585858
-palette = 9=#ab4642
-palette = 10=#8D8F8D
-palette = 11=#f7ca88
-palette = 12=#7cafc2
-palette = 13=#ba8baf
-palette = 14=#1ABB9B
-palette = 15=#f8f8f8
+theme = Tomorrow Night
