@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LIGHT="Tomorrow"
+LIGHT="tomorrow-readable"
 DARK="Tomorrow Night"
 CONFIG="$HOME/.config/ghostty/config"
 
