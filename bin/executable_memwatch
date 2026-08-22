@@ -91,12 +91,57 @@
 #     load driver and the nightly restart is only a floor, not a fix: it resets
 #     the accumulation nightly without slowing the daily climb, so a heavy day
 #     can still cross 100% hours before 03:00 comes around.
-#   2026-07-27 — remediation: ES/OpenSearch no longer start in any ccapi stack
-#     (~4.5GB of the 14GiB VM reclaimed, 6 JVMs -> 0). Implemented as symlinks
-#     to ~/.config/cocam/{no-search.yml,dip.override.yml}, nothing changed in
-#     the repo. Mechanics, gotchas, and the dead-ELASTICSEARCH_URL trap are
-#     documented in ~/.claude/ccapi-local.md (reachable as CLAUDE.local.md from
-#     every worktree). Re-enable per stack: docker compose --profile search up.
+#   2026-07-27 — tried and REVERTED, do not repeat as-is: suppressing ES/
+#     OpenSearch across all ccapi stacks reclaims ~4.5GB of the 14GiB VM, but it
+#     breaks the test suites in every worktree — the specs need a reachable
+#     elasticsearch, which is why debug_rspec depends on it. Backed out the same
+#     day (symlinks + git excludes + ~/.config/cocam all removed). The memory win
+#     is real, so if revisiting: the answer is ONE shared ES/OS for all worktrees,
+#     not zero. Killing search outright is not viable.
+#
+#   2026-08-16 01:32 — panic, panic-full-2026-08-17-084716.0002.panic (report got written/
+#     symbolicated late; confirmed via the panic's own Epoch Time fields: Boot 08-10 15:54,
+#     panic 08-16 01:32:15 — 17s before this boot's kern.boottime). Signature reverted to the
+#     ORIGINAL 07-12 victim: "watchdog timeout: no checkins from watchdogd in 91 seconds",
+#     not WindowServer. memwatch had been ALERTing continuously since 08-15 06:09 (1270
+#     ALERTs that one day); segments pinned at 100.0% and swap at 37319/37888MB from ~22:00
+#     08-15 straight through to the crash, 3.5+ hours solid. The sampler's own cadence
+#     degraded from 30s to 4min+ apart as the box starved, then stopped logging entirely at
+#     01:14:59, ~17min before the panic — the box was fully wedged, not just memwatch dying.
+#     Top %mem in the panic report was Slack Helper (Renderer) / Wispr Flow Helper, NOT
+#     colima/Virtualization this time — only 2 stacks were up (14 containers total), well
+#     under the 07-26 31-container scenario.
+#
+#     THE REAL FINDING — colima-nightly-restart's core assumption is WRONG: tearing down the
+#     colima VM does not reclaim host swap, even when the teardown is verified clean (VM pid
+#     gone, "instance colima has shut down" logged, no errors). Post-restart swap `used`
+#     across every run 08-12 through 08-15:
+#       08-12 03:00 restart -> post-restart swap used:      0.00M   (healthy)
+#       08-13 03:00 restart -> post-restart swap used:     46.31M   (healthy)
+#       08-14 03:00 restart -> post-restart swap used:  11769.44M   (already bad)
+#       08-15 03:00 restart -> post-restart swap used:  26888.25M   (worse)
+#       08-15 10:04 ad-hoc  -> post-restart swap used:  31686.62M   (worse STILL, despite a
+#                                                                     clean restart 7h prior)
+#     Worse: swap `total` (the swapfile pool macOS has allocated) is monotonic non-decreasing
+#     for the entire boot session — it grows in ~1GiB steps as pressure rises and is NEVER
+#     observed shrinking mid-session anywhere in the log. The only two drops to 0.00M in the
+#     whole history are actual reboots (08-10 15:55, and 08-17 08:47 post THIS panic). So
+#     "restart colima" was never capable of creating real headroom on this box — at best it
+#     reclaims colima's own recent delta while whatever else is contributing (colima's
+#     accumulated footprint over multiple days, and/or long-lived host processes — Firefox
+#     with several plugin-container helpers sits at the top of %mem in nearly every sample in
+#     this log, crash days or not) keeps ratcheting until the next full reboot. Every fix
+#     tried so far (colima/lima/docker upgrades, VM memory ceiling cuts, nightly VM restart)
+#     assumed colima was the reclaimable leak; none of them can work if the actual constraint
+#     is "swap only resets on reboot." This box hadn't rebooted since 08-10 15:55 until this
+#     panic forced one on 08-16 01:32 — 5+ uptime days, which lines up with "roughly weekly"
+#     better than "days since VM restart" ever did, since VM restarts ran nightly the whole
+#     time and did not prevent it.
+#     OPEN QUESTION for next time: is a scheduled real reboot (not just colima restart) the
+#     only actual fix now? And: does swap `used` truly not drop at all right after colima
+#     teardown, or does it briefly drop and get re-consumed within the ~30s-1min before the
+#     next sample/log line? Worth instrumenting colima-nightly-restart to sample swap used
+#     immediately post-teardown AND again 60s later to tell those two cases apart.
 #
 #     TRIAGE CHEATSHEET for next time:
 #       tail ~/Library/Logs/colima-restart/colima-restart.log   # did it run AND reclaim?
@@ -111,8 +156,10 @@
 #     resident (07-20: 18.78GB, 07-26: 18.32GB) and swap fills 36/36.86GB.
 #     100% of vm.compressor.segment.limit == ~18.5GB == crash. That's what the
 #     90% ALERT threshold below is buying lead time on. Cadence so far is
-#     roughly weekly: 07-12, 07-20, 07-26 — it tracks days-since-VM-restart
-#     and number-of-stacks-up, not calendar.
+#     roughly weekly: 07-12, 07-20, 07-26, 08-16 — but per the 08-16 finding
+#     above it actually tracks DAYS-SINCE-LAST-REBOOT (swap total/used never
+#     drops mid-session), not days-since-VM-restart as previously assumed —
+#     colima restarts don't reset the clock at all.
 
 set -euo pipefail
 
@@ -227,6 +274,7 @@ rotate_if_needed() {
 
 snapshot() {
   local ts free_pct seg_total seg_limit seg_pct swap top_procs
+  local page_size stored_pages occupied_pages stored_mb occupied_mb ratio
 
   ts=$(date '+%Y-%m-%d %H:%M:%S')
   free_pct=$(memory_pressure -Q 2>/dev/null | awk -F': ' '/free percentage/{print $2}')
@@ -236,10 +284,23 @@ snapshot() {
   swap=$(sysctl -n vm.swapusage)
   top_procs=$(ps -Ao pid,pcpu,pmem,rss,comm -m | awk 'NR>1 && NR<=6')
 
+  # Distinguishes "segments full because there's genuinely that much compressed
+  # data" from "segments full but mostly empty" (fragmentation/leak) — the 08-16
+  # panic showed 100% of segments BAD but only 37% of compressed-page capacity
+  # used, which top-by-%mem alone can't explain since compressed guest/VM pages
+  # don't show up as any process's resident set. See the 08-16 incident note.
+  page_size=$(sysctl -n hw.pagesize 2>/dev/null || echo 16384)
+  stored_pages=$(vm_stat 2>/dev/null | awk -F': *' '/Pages stored in compressor/{gsub(/\.$/,"",$2); print $2}')
+  occupied_pages=$(vm_stat 2>/dev/null | awk -F': *' '/Pages occupied by compressor/{gsub(/\.$/,"",$2); print $2}')
+  stored_mb=$(awk -v p="$stored_pages" -v s="$page_size" 'BEGIN{ printf "%.0f", p*s/1048576 }')
+  occupied_mb=$(awk -v p="$occupied_pages" -v s="$page_size" 'BEGIN{ printf "%.0f", p*s/1048576 }')
+  ratio=$(awk -v st="$stored_pages" -v oc="$occupied_pages" 'BEGIN{ if (oc>0) printf "%.2f", st/oc; else print "n/a" }')
+
   {
     echo "=== $ts ==="
     echo "free_mem_pct: ${free_pct:-unknown}"
     echo "compressor_segments: ${seg_total}/${seg_limit} (${seg_pct}%)"
+    echo "compressor_pages: logical=${stored_mb}MB resident=${occupied_mb}MB ratio=${ratio}x"
     echo "swap: ${swap}"
     echo "top by %mem:"
     echo "$top_procs"
