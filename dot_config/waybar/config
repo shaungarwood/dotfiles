@@ -3,20 +3,24 @@
 {
 	"layer": "top",
 	"position": "top",
+	"margin-top": 6,
+	"margin-left": 10,
+	"margin-right": 10,
+	"margin-bottom": 3,
+	"spacing": 3,
 
 	"modules-left": [
-		"sway/workspaces"
+		"sway/workspaces",
+		"sway/mode"
 	],
 	"modules-center": [
-		"clock#1",
-		"clock#2",
-		"clock#3"
+		"clock"
 	],
 	"modules-right": [
-		"network",
 		"pulseaudio",
-		"memory",
+		"network",
 		"cpu",
+		"memory",
 		"custom/temp",
 		"battery",
 		"tray"
@@ -24,52 +28,73 @@
 
 	"sway/workspaces": {
 		"disable-scroll": true,
-		"format": "{index}:{name}"
+		"all-outputs": true,
+		"format": "{value}"
 	},
 
-	"clock#1": {
-		"format": "{:%a}",
-		"timezone": "America/Denver",
+	"sway/mode": {
+		"format": "󰩨 {}",
 		"tooltip": false
 	},
-	"clock#2": {
-		"format": "{:%H:%M}",
+
+	"clock": {
+		"interval": 1,
 		"timezone": "America/Denver",
-		"tooltip": false
-	},
-	"clock#3": {
-		"format": "{:%m-%d}",
-		"timezone": "America/Denver",
-		"tooltip": false
+		"format": "{:󰃭 %a %b %d  󰅐 %H:%M}",
+		"format-alt": "{:󰅐 %H:%M:%S  󰃭 %Y-%m-%d}",
+		"tooltip-format": "<tt><small>{calendar}</small></tt>"
 	},
 
 	"pulseaudio": {
-		"format": "{icon} {volume:2}%",
-		"format-bluetooth": "{icon}  {volume}%",
-		"format-muted": "MUTE",
+		"format": "{icon} {volume}%",
+		"format-bluetooth": "{icon}󰂰 {volume}%",
+		"format-bluetooth-muted": "󰝟󰂰",
+		"format-muted": "󰝟 Muted",
 		"format-icons": {
-			"headphones": "",
-			"default": ["", ""]
+			"headphone": "󰋋",
+			"hands-free": "󰋋",
+			"headset": "󰋋",
+			"phone": "󰏲",
+			"portable": "󰏲",
+			"car": "󰄋",
+			"default": ["󰕿", "󰖀", "󰕾"]
 		},
 		"scroll-step": 5,
 		"on-click": "pamixer -t",
 		"on-click-right": "pavucontrol"
 	},
 
-	"memory": {
+	"network": {
 		"interval": 5,
-		"format": "Mem {}%"
+		"format-wifi": "󰤨 {essid}",
+		"format-ethernet": "󰈀 {ifname}",
+		"format-linked": "󰈀 {ifname} (No IP)",
+		"format-disconnected": "󰤭 Disconnected",
+		"tooltip-format-wifi": "󰤨 {essid} ({signalStrength}%)\nIP: {ipaddr}",
+		"tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}",
+		"tooltip-format-disconnected": "Disconnected",
+		"on-click": "wifi-picker"
 	},
+
 	"cpu": {
 		"interval": 5,
-		"format": "CPU {usage:2}%"
+		"format": " {usage:2}%",
+		"tooltip": true
 	},
+
+	"memory": {
+		"interval": 5,
+		"format": "󰍛 {percentage:2}%",
+		"tooltip-format": "RAM: {used:0.1f}GiB / {total:0.1f}GiB ({percentage}%)"
+	},
+
 	"custom/temp": {
 		"exec": "waybar-temp",
 		"return-type": "json",
 		"interval": 5,
 		"tooltip": false
 	},
+
 	"battery": {
 		"states": {
 			"good": 95,
@@ -77,17 +102,14 @@
 			"critical": 15
 		},
 		"format": "{icon} {capacity}%",
-		"format-icons": ["", "", "", "", ""]
+		"format-charging": "󰂄 {capacity}%",
+		"format-plugged": "󰚥 {capacity}%",
+		"format-alt": "{icon} {time}",
+		"format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
 	},
-	"network": {
-		"interval": 5,
-		"format-wifi": " {essid} ({signalStrength}%)",
-		"format-ethernet": " {ifname}",
-		"format-disconnected": "⚠ Disconnected",
-		"tooltip": false,
-		"on-click": "wifi-picker"
-	},
+
 	"tray": {
-		"icon-size": 10
+		"icon-size": 14,
+		"spacing": 8
 	}
 }
