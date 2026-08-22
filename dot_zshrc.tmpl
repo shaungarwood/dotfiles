@@ -47,6 +47,17 @@ eval "$(mise activate zsh)"
 # Zellij: start a new session per terminal (use Ctrl+O → w to attach to existing)
 if [[ -z "$ZELLIJ" ]]; then
   zellij
+else
+  # Blank this tab's name so the zjstatus bar renders just the index ("1" rather
+  # than "1Tab #1"). Only touches a tab still carrying zellij's default name, so
+  # it can never clobber the ":my-session" that
+  # ~/.claude/hooks/zellij-tab-sync.sh writes.
+  # Backgrounded (&!) so it costs the prompt nothing -- it's ~70ms of zellij IPC.
+  {
+    zellij action dump-layout 2>/dev/null |
+      grep -q 'tab name="Tab #[0-9]*" focus=true' &&
+      zellij action rename-tab "" 2>/dev/null
+  } &!
 fi
 {{- end }}
 

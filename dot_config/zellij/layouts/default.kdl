@@ -19,8 +19,11 @@ layout {
             mode_entersearch "#[bg=#268bd2,fg=#002b36,bold] ? #[fg=#268bd2,bg=#073642]"
             mode_renametab   "#[bg=#d33682,fg=#002b36,bold] R #[fg=#d33682,bg=#073642]"
 
-            tab_normal "#[fg=#586e75,bg=#073642] {index} "
-            tab_active "#[fg=#073642,bg=#268bd2]#[fg=#002b36,bg=#268bd2,bold] {index} #[fg=#268bd2,bg=#073642]"
+            // No separator here on purpose: ~/.claude/hooks/zellij-tab-sync.sh
+            // writes the tab name as ":my-session" (colon included) or blanks it,
+            // so unnamed tabs stay lean -- "5" rather than "5:Tab #5".
+            tab_normal "#[fg=#586e75,bg=#073642] {index}{name} "
+            tab_active "#[fg=#073642,bg=#268bd2]#[fg=#002b36,bg=#268bd2,bold] {index}{name} #[fg=#268bd2,bg=#073642]"
         }
     }
 }
