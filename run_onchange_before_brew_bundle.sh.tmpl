@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Install/update Homebrew formulae and casks from the tracked Brewfile.
+# Re-runs automatically whenever Brewfile changes (run_onchange, not run_once).
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+
+set -e
+
+if [ "{{ .chezmoi.os }}" != "darwin" ]; then
+  exit 0
+fi
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Warning: Homebrew not found, skipping brew bundle"
+  exit 0
+fi
+
+brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"

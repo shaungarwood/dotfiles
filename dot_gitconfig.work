@@ -1,0 +1,11 @@
+[user]
+  email = shaun.garwood@companycam.com
+  name = Shaun Garwood
+  signingkey = ~/.ssh/id_rsa.pub
+[core]
+  sshCommand = /usr/bin/ssh -i ~/.ssh/cocam_github
+[commit]
+  gpgsign = true
+[gpg]
+  program = /opt/homebrew/bin/gpg
+  format = ssh

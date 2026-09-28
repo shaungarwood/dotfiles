@@ -1,0 +1,13 @@
+{
+  "$schema": "https://charm.land/crush.json",
+  "models": {
+    "large": {
+      "model": "gemini-3-pro-preview",
+      "provider": "gemini"
+    },
+    "small": {
+      "model": "gemini-3-flash-preview",
+      "provider": "gemini"
+    }
+  }
+}

@@ -40,6 +40,8 @@ Do NOT roll over checked items (`- [x]`).
 Do NOT roll over cancelled items (`- [~]`) — cancelled means done/abandoned, not pending.
 Do NOT roll over items from the `### 🔁 Weekly` section — these are managed separately and reset each week.
 
+**Nested/indented sub-items:** evaluate every line by its own checkbox marker, independent of its parent's state. Never copy a parent bullet's block verbatim just because the parent line is still `- [ ]` — re-check each indented child individually and drop any that are `- [x]` or `- [~]`, even if siblings under the same parent are still open. A checked child under an unchecked parent is dropped; the parent and its remaining unchecked children still roll over.
+
 ## Step 5 — Infer tags from previous daily
 
 Scan only the **checked items** (`- [x]`) from the previous daily for topic signals and build a tag list for today's note.
@@ -158,6 +160,7 @@ status: active
 - Filename: `daily/YYYY-MM-DD.md`
 - Always update `updated:` when editing
 - Roll over ALL unchecked items regardless of section, EXCEPT items from `### 🔁 Weekly` or marked `- [~]` (cancelled — don't roll over)
+- Nested/indented sub-items are evaluated individually by their own checkbox marker, not by their parent's — never bulk-copy a parent's sub-list without re-checking each child
 - Weekly tasks reset fresh each week — do not carry them over day-to-day
 - `## 🚧 Active Work` is a live Linear mirror: always regenerate it (plain bullets, never `- [ ]`), never roll it over
 - `## 🧠 Radar` is carried forward **verbatim** and never edited by Claude on a `/daily` run

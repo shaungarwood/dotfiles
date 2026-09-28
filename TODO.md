@@ -41,6 +41,27 @@ Install script notes:
 - Linux: Install `build-essential` + `brew install gcc`
 - Add shellenv to .zshrc
 
+**Status**: `Brewfile` is now tracked (dumped via `brew bundle dump`) and installed automatically
+by `run_onchange_before_brew_bundle.sh.tmpl` on macOS. Re-run `brew bundle dump --file=Brewfile --force`
+from the chezmoi source dir periodically to keep it current — it does not auto-update itself.
+`Brewfile` is chezmoiignore'd from being applied to `$HOME` since it's only input to that script.
+
+## Manual setup on a new machine (can't/shouldn't be tracked in chezmoi)
+
+Found during a 2026-09-28 audit. This repo is **public**, so anything credential-bearing or
+naming coworkers/internal repos is deliberately excluded — restore/redo these by hand instead:
+
+- **SSH/GPG keys**: `~/.ssh/*` private keys, `~/.gnupg` secret keyring — restore from backup/password manager, never from git.
+- **AWS SSO**: `~/.aws/sso` cache — re-run `aws sso login`.
+- **1Password / Raycast / other app state**: vault data, extension caches (e.g. `~/Library/Application Support/com.raycast.macos`) — sign in fresh, don't copy.
+- **`gh` CLI**: `~/.config/gh/hosts.yml` holds the OAuth token — run `gh auth login`; only `config.yml` (preferences) is tracked.
+- **Graphite CLI**: `~/.config/graphite/auth` holds an auth token — run `gt auth`; only `user_config`/`aliases` are tracked.
+- **GitHub Copilot** (`~/.config/github-copilot/auth.db*`): re-authenticate via the editor/CLI; not tracked at all.
+- **`cocam` CLI** (`~/.cocam/*.yml`): re-run `cocam` setup — these files mix AWS profile config with credential-shaped fields (`slack_auth_token`, `cocam_client_id`) that get populated over time, so the whole dir is excluded.
+- **`swamp` CLI docs/state** (`~/.config/swamp/`, `~/.claude/skills/swamp*`): reference docs bundled with the tool itself (900K+), not hand-authored config — reinstall via whatever provides the `swamp` skill rather than copying from here.
+- **Claude skills naming coworkers or internal repos** (`curtis-digest`, `weekly-update`, and the `remove-interactor`/`fix-cocam-vite-oom` commands): intentionally not tracked in this public repo — same policy as the existing `people`/`career-note` exclusion. Keep these in sync manually (e.g. via `sync-to-promptbox` to a private team repo) if needed on a new machine.
+- **Bitwarden** (see README): needs `bw login` + `BW_SESSION` before templated secrets resolve.
+
 ## Application Setup
 
 ### Claude Code

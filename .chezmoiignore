@@ -5,6 +5,9 @@ TODO.md
 Vagrantfile
 test/
 
+# Input data for run_onchange_before_brew_bundle.sh.tmpl, not a dotfile target itself
+Brewfile
+
 {{ if not .variables.gui -}}
 # Headless machines get no desktop config at all.
 .config/kitty

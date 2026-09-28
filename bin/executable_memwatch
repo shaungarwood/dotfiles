@@ -122,12 +122,12 @@
 #       08-15 03:00 restart -> post-restart swap used:  26888.25M   (worse)
 #       08-15 10:04 ad-hoc  -> post-restart swap used:  31686.62M   (worse STILL, despite a
 #                                                                     clean restart 7h prior)
-#     Worse: swap `total` (the swapfile pool macOS has allocated) is monotonic non-decreasing
-#     for the entire boot session — it grows in ~1GiB steps as pressure rises and is NEVER
-#     observed shrinking mid-session anywhere in the log. The only two drops to 0.00M in the
-#     whole history are actual reboots (08-10 15:55, and 08-17 08:47 post THIS panic). So
-#     "restart colima" was never capable of creating real headroom on this box — at best it
-#     reclaims colima's own recent delta while whatever else is contributing (colima's
+#     Worse: swap `total` (the swapfile pool macOS has allocated) never dropped ONCE across
+#     this entire ~3-day session even as it grew in ~1GiB steps under rising pressure — see
+#     the 08-26/08-27 entry below for a correction: in OTHER sessions swap total does
+#     sometimes drop mid-session when real pressure eases, so this isn't an absolute rule —
+#     but in THIS session it never did, and "restart colima" specifically never correlated
+#     with any drop. At best it reclaims colima's own recent delta while whatever else is contributing (colima's
 #     accumulated footprint over multiple days, and/or long-lived host processes — Firefox
 #     with several plugin-container helpers sits at the top of %mem in nearly every sample in
 #     this log, crash days or not) keeps ratcheting until the next full reboot. Every fix
@@ -142,6 +142,50 @@
 #     teardown, or does it briefly drop and get re-consumed within the ~30s-1min before the
 #     next sample/log line? Worth instrumenting colima-nightly-restart to sample swap used
 #     immediately post-teardown AND again 60s later to tell those two cases apart.
+#     FOLLOWUP (see 08-26/08-27 entry below): added `compressor_pages` (vm_stat stored vs
+#     occupied pages, i.e. logical-vs-resident + ratio) to every snapshot on 08-17, so the
+#     next incident has this data live instead of only from a crash dump.
+#
+#   2026-08-26 22:xx -> 2026-08-27 02:00 — panic, third of the same signature (decoded from
+#     the panic's own Epoch Time fields: Boot 08-23 15:19, panic 08-27 02:00:24, 23s before
+#     this boot's kern.boottime). "watchdog timeout: no checkins from watchdogd in 94
+#     seconds" again. Compressor Info: "38% of compressed pages limit (OK) and 100% of
+#     segments limit (BAD)" — 07-16 said 37%/100%, this says 38%/100%. That disproportion
+#     (segments maxed, actual compressed-byte capacity barely 1/3 used) is now REPRODUCIBLE
+#     across both incidents where we have the raw panic text. That's the single most
+#     important pattern here: the crash trigger looks like the compressor SEGMENT COUNT
+#     ceiling (vm.compressor.segment.limit = 927289), not "ran out of room to compress
+#     data." Whatever's driving it is generating lots of individually-compressed pages that
+#     exhaust segment slots well before they'd exhaust actual capacity — a fragmentation-style
+#     ceiling, which any sufficiently large/long-lived aggregate compressor workload can hit
+#     regardless of which specific app is responsible. The new compressor_pages field (added
+#     08-17) caught the full ramp this time: logical held steady at ~89.3-89.5GB, resident
+#     ~19.4-19.6GB, ratio ~4.6x, for the last ~45+ min of logging before the crash — and the
+#     07-26 incident's own note independently measured "18.3GB resident, holding 93.8GB
+#     logical (5.1x)". Same ballpark both times: ~19GB resident / ~90GB logical / ~4.6-5.1x —
+#     this machine appears to hit the SAME wall every time regardless of what's feeding it.
+#
+#     WHAT WAS DIFFERENT FROM 08-16, and why the "swap total is monotonic, only reboot
+#     resets it" claim above needs correcting: this time swap `total` fluctuated UP AND DOWN
+#     by several GiB repeatedly through the day (e.g. 08-26 02:55 was 28672M, by 04:26 it
+#     was down to 22528M, a real ~6GB give-back in the ~1.5h after that morning's 03:00
+#     colima-nightly-restart) before resuming its climb and pinning by ~22:14 that night.
+#     So swap CAN shrink mid-session when real pressure eases — it just didn't in the 08-16
+#     session because pressure never actually eased there. Also unlike 08-16 (colima almost
+#     invisible, only 4 top-5 appearances in 3 days), the VM was in the top-5-by-%mem 1314
+#     times just on 08-26/08-27 alone, continuously from ~14:00 onward, RSS climbing in the
+#     final hours (post-22:00 avg >1.5GB) right alongside the crash — i.e. colima was doing
+#     real, heavy, sustained work this cycle and plausibly WAS the dominant contributor this
+#     time, even though restarting it didn't survive the day's later workload.
+#     RECURRING TELL, both incidents: in the last ~2-3h before the crash, total top-5 RSS
+#     (everything visible, not just colima) collapses toward zero as the compressor evicts
+#     every process's resident pages to make room — 08-16 went from ~6GB to <100MB by crash
+#     time; 08-26/27 went from ~4.2GB (21:00) to ~300MB (01:00). This is a downstream effect,
+#     not a cause, but it's a clean corroborating signal that the whole box — not one app —
+#     is being squeezed, and it shows up before the sampler itself stops logging.
+#     UPTIME: 08-23 15:19 -> 08-27 02:00 = ~3.4 days, shorter than 08-16's ~5.7 days —
+#     consistent with "days since reboot" still being the rough clock, but the rate this
+#     time was faster, matching the heavier colima/VM activity observed.
 #
 #     TRIAGE CHEATSHEET for next time:
 #       tail ~/Library/Logs/colima-restart/colima-restart.log   # did it run AND reclaim?
@@ -152,14 +196,19 @@
 #       awk '/^=== /{d=$2} /compressor_segments/{split($3,a,"(");print d,a[2]}' \
 #         ~/Library/Logs/memwatch/memwatch.log | sort -u -k1,1 -k2,2gr | sort -u -k1,1
 #
-#     KNOWN CEILING: this box dies when the compressor reaches ~18.3-18.8GB
-#     resident (07-20: 18.78GB, 07-26: 18.32GB) and swap fills 36/36.86GB.
-#     100% of vm.compressor.segment.limit == ~18.5GB == crash. That's what the
-#     90% ALERT threshold below is buying lead time on. Cadence so far is
-#     roughly weekly: 07-12, 07-20, 07-26, 08-16 — but per the 08-16 finding
-#     above it actually tracks DAYS-SINCE-LAST-REBOOT (swap total/used never
-#     drops mid-session), not days-since-VM-restart as previously assumed —
-#     colima restarts don't reset the clock at all.
+#     KNOWN CEILING: this box dies when compressor SEGMENTS hit 927289/927289
+#     (100% of vm.compressor.segment.limit), consistently at only ~37-38% of
+#     the compressed-PAGE limit and ~19-20GB resident / ~90GB logical (see
+#     08-26/08-27 entry) — a segment-count ceiling, not a data-volume ceiling.
+#     90% ALERT threshold below is buying lead time on that. Cadence so far:
+#     07-12, 07-20, 07-26, 08-16 (~5.7 uptime days), 08-26/27 (~3.4 uptime
+#     days) — roughly tracks days-since-last-reboot (colima restarts don't
+#     reset the clock), but the rate varies with how hard colima/the VM is
+#     actually being worked that cycle — 08-16 had colima nearly idle and
+#     still crashed on a longer timeline; 08-26/27 had it heavily active and
+#     crashed faster. Swap total CAN shrink mid-session when real pressure
+#     eases (seen 08-26), just never enough or for long enough to matter once
+#     things are this close to the ceiling.
 
 set -euo pipefail
 
