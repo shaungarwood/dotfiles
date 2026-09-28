@@ -8,7 +8,9 @@ ruby = "3.4.7"
 python = "3.13"       # Use stable version (3.14 not fully released)
 
 # CLI tools
-zellij = "latest"
+# Pinned (not "latest"): 0.44.0 has a known endless-resize-flicker/crash bug,
+# and 0.45.1 has a fresh (2026-09-27) panic-on-ClosePane report. 0.43.1 predates both.
+zellij = "0.43.1"
 "npm:tree-sitter-cli" = "latest"
 lazygit = "latest"
 lazydocker = "latest"

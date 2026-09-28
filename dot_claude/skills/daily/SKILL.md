@@ -3,7 +3,7 @@ name: daily
 description: Create or update today's daily note in the Obsidian vault, rolling over unchecked tasks from the most recent previous daily note.
 ---
 
-Create or update today's daily note in the Obsidian vault at `/Users/shaungarwood/vaults/Work`.
+Create or update today's daily note in the Obsidian vault at `/Users/shaungarwood/vaults/cocam notes`.
 
 ## Step 0 — Detect future date intent
 

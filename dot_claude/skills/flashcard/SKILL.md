@@ -6,7 +6,7 @@ description: Convert a question/answer pair, a topic to brainstorm cards for, or
 Convert flashcard content into [Obsidian Spaced Repetition](https://stephenmwangi.com/obsidian-spaced-repetition/)
 syntax and write it into a deck note.
 
-**Vault**: `~/vaults/Work`. **Target dir**: `~/vaults/Work/flashcards/` — always.
+**Vault**: `~/vaults/cocam notes`. **Target dir**: `~/vaults/cocam notes/flashcards/` — always.
 
 This is a normal conversation, not a one-shot call — for topic mode or any
 multi-card batch, draft → get feedback → revise before writing (Step 5). Only
@@ -54,7 +54,7 @@ angle/depth they want before drafting.
 
 **Deck name**: from an explicit arg, else infer from the topic/title/filename
 (slugified). If nothing reasonable comes up, ask — don't invent one.
-**File**: `~/vaults/Work/flashcards/<deck-name-slugified>.md`, one file per deck.
+**File**: `~/vaults/cocam notes/flashcards/<deck-name-slugified>.md`, one file per deck.
 
 ## Step 5 — Review before writing
 

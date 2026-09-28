@@ -77,15 +77,15 @@
 
 ## Personal Knowledge Vault
 
-Shaun has a personal work notes vault at `~/vaults/Work`.
+Shaun has a personal work notes vault at `~/vaults/cocam notes`.
 It contains: project notes, meeting notes, spikes, cheatsheets, research, career notes, and people context.
 
 **There is no MCP for this vault. Access it directly with native tools:**
 - `Read` — read a specific note
-- `Glob("**/*.md", path="~/vaults/Work")` — find notes by filename pattern
-- `Grep(pattern, path="~/vaults/Work")` — full-text search across all notes
+- `Glob("**/*.md", path="~/vaults/cocam notes")` — find notes by filename pattern
+- `Grep(pattern, path="~/vaults/cocam notes")` — full-text search across all notes
 
 When asked to look something up in the vault, use these tools. Do not look for `mcp__obsidian__` tools — they don't exist.
 
-Vault structure and conventions: `~/vaults/Work/CLAUDE.md`
+Vault structure and conventions: `~/vaults/cocam notes/CLAUDE.md`
 
