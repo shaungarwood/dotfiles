@@ -5,8 +5,12 @@
 pane_frames false  // zjstatus manages UI chrome
 show_startup_tips false
 
-// Session persistence
-session_serialization true
+// Session lifecycle: one session per terminal (see .zshrc), so don't leave
+// orphans behind. Closing the terminal window quits the session instead of
+// detaching it (zellij's default), and no serialization means nothing lingers
+// as a resurrectable EXITED session. Ctrl+a d still detaches on purpose.
+on_force_close "quit"
+session_serialization false
 pane_viewport_serialization true
 
 // Clipboard integration
@@ -14,6 +18,7 @@ copy_command {{ if eq .chezmoi.os "darwin" }}"pbcopy"{{ else }}"wl-copy"{{ end }
 
 // Editor for EditScrollback
 scrollback_editor "nvim -u ~/.config/nvim/minimal-zellij-scrollback-config.lua"
+scroll_buffer_size 5000
 
 // Default layout loads zjstatus status bar
 default_layout "default"
