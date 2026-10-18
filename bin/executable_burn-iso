@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+# burn-iso — Safely burn an ISO image to a USB drive using dd
+# Usage: burn-iso <image.iso> <target-device> [block-size]
+
+set -euo pipefail
+
+# ANSI color codes (if connected to a terminal)
+if [[ -t 1 ]]; then
+  BOLD=$'\033[1m'
+  RED=$'\033[1;31m'
+  YELLOW=$'\033[1;33m'
+  GREEN=$'\033[1;32m'
+  BLUE=$'\033[1;34m'
+  RESET=$'\033[0m'
+else
+  BOLD=""
+  RED=""
+  YELLOW=""
+  GREEN=""
+  BLUE=""
+  RESET=""
+fi
+
+show_disks() {
+  echo "${BOLD}Detected Disks:${RESET}"
+  lsblk -d -p -o NAME,SIZE,TYPE,TRAN,MODEL,VENDOR 2>/dev/null | grep -E '^NAME|disk' || true
+}
+
+usage() {
+  cat <<EOF
+${BOLD}Usage:${RESET}
+  burn-iso <iso_file> <target_device> [block_size]
+
+${BOLD}Arguments:${RESET}
+  <iso_file>        Path to the .iso file to burn
+  <target_device>   Target block device (e.g. /dev/sda or sda)
+  [block_size]      dd block size (optional, default: 4M)
+
+${BOLD}Examples:${RESET}
+  burn-iso ubuntu-24.04.iso /dev/sda
+  burn-iso archlinux.iso sda 16M
+
+EOF
+  show_disks
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 0
+fi
+
+if [[ $# -lt 2 ]]; then
+  usage
+  exit 1
+fi
+
+ISO_FILE="$1"
+TARGET_RAW="$2"
+BS="${3:-4M}"
+
+# 1. Validate ISO file
+if [[ ! -f "$ISO_FILE" ]]; then
+  echo -e "${RED}Error: ISO file '$ISO_FILE' does not exist or is not a regular file.${RESET}" >&2
+  exit 1
+fi
+
+if [[ ! -r "$ISO_FILE" ]]; then
+  echo -e "${RED}Error: Cannot read '$ISO_FILE'. Check file permissions.${RESET}" >&2
+  exit 1
+fi
+
+ISO_SIZE="$(du -h "$ISO_FILE" | cut -f1)"
+
+# 2. Normalize and validate target device
+if [[ ! -e "$TARGET_RAW" && -e "/dev/$TARGET_RAW" ]]; then
+  DEVICE="/dev/$TARGET_RAW"
+else
+  DEVICE="$TARGET_RAW"
+fi
+
+if [[ ! -b "$DEVICE" ]]; then
+  echo -e "${RED}Error: '$DEVICE' is not a valid block device.${RESET}" >&2
+  echo "" >&2
+  show_disks >&2
+  exit 1
+fi
+
+DEV_REAL="$(realpath "$DEVICE")"
+
+# 3. Critical Safety Check: Root & System Mount Protection
+ROOT_SRC="$(findmnt -n -o SOURCE / 2>/dev/null || true)"
+if [[ -n "$ROOT_SRC" ]]; then
+  ROOT_DEVS="$(lsblk -sno PATH "$ROOT_SRC" 2>/dev/null || true)"
+  for r in $ROOT_DEVS; do
+    if [[ -n "$r" && "$(realpath "$r" 2>/dev/null)" == "$DEV_REAL" ]]; then
+      echo -e "${RED}CRITICAL SAFETY ERROR: Refusing to write to $DEVICE!${RESET}" >&2
+      echo -e "${RED}This device is part of your active root filesystem (/): $r${RESET}" >&2
+      exit 1
+    fi
+  done
+fi
+
+# Check mountpoints on target device for system paths
+for mp in $(lsblk -rno MOUNTPOINTS "$DEV_REAL" 2>/dev/null | grep -v '^$'); do
+  if [[ "$mp" == "/" || "$mp" == "/boot"* || "$mp" == "/home"* || "$mp" == "/etc"* ]]; then
+    echo -e "${RED}CRITICAL SAFETY ERROR: $DEVICE contains critical mountpoint '$mp'! Aborting.${RESET}" >&2
+    exit 1
+  fi
+done
+
+# 4. Warn if writing to a partition instead of whole disk
+DEV_TYPE="$(lsblk -no TYPE "$DEV_REAL" 2>/dev/null | head -n1 || true)"
+if [[ "$DEV_TYPE" == "part" ]]; then
+  echo -e "${YELLOW}WARNING: $DEVICE is a partition (TYPE=part), not a whole disk!${RESET}" >&2
+  echo "Bootable installer drives usually require writing to the whole drive (e.g. /dev/sda instead of /dev/sda1)." >&2
+  read -rp "Are you SURE you want to write to a partition instead of whole disk? [y/N]: " confirm_part
+  if [[ ! "$confirm_part" =~ ^[Yy]$ ]]; then
+    echo "Aborted." >&2
+    exit 1
+  fi
+fi
+
+# 5. Automatically unmount any active partitions on the device
+MOUNTED_PARTS="$(lsblk -rno PATH,MOUNTPOINTS "$DEV_REAL" 2>/dev/null | awk '$2 != "" {print $1}' | sort -u || true)"
+if [[ -n "$MOUNTED_PARTS" ]]; then
+  echo -e "${YELLOW}Unmounting active partitions on $DEVICE...${RESET}"
+  for part in $MOUNTED_PARTS; do
+    echo "  Unmounting $part..."
+    sudo umount "$part" || {
+      echo -e "${RED}Error: Failed to unmount $part. Please unmount it manually.${RESET}" >&2
+      exit 1
+    }
+  done
+fi
+
+# 6. Display confirmation details
+echo ""
+echo -e "${BOLD}${BLUE}=== Burn ISO Configuration ===${RESET}"
+echo -e "  ${BOLD}Source ISO:${RESET}   $ISO_FILE ($ISO_SIZE)"
+echo -e "  ${BOLD}Target Device:${RESET} $DEV_REAL"
+echo -e "  ${BOLD}Block Size:${RESET}    $BS"
+echo ""
+echo -e "${BOLD}Target Device Details:${RESET}"
+lsblk -p -o NAME,SIZE,TYPE,TRAN,MODEL,FSTYPE,LABEL "$DEV_REAL"
+echo ""
+echo -e "${RED}${BOLD}WARNING: ALL EXISTING DATA ON $DEV_REAL WILL BE PERMANENTLY DESTROYED!${RESET}"
+read -rp "Type 'yes' to proceed: " confirm
+
+if [[ "$confirm" != "yes" ]]; then
+  echo "Confirmation not received ('yes'). Aborted."
+  exit 0
+fi
+
+# 7. Write ISO with dd and sync
+echo ""
+echo -e "${GREEN}Writing $ISO_FILE to $DEV_REAL with bs=$BS...${RESET}"
+sudo dd if="$ISO_FILE" of="$DEV_REAL" bs="$BS" status=progress conv=fsync
+
+echo ""
+echo -e "${BLUE}Flushing system cache (sync)...${RESET}"
+sync
+
+echo -e "${GREEN}${BOLD}Done! ISO successfully written to $DEV_REAL.${RESET}"
+echo "It is now safe to unplug the drive."
+
+if command -v notify-send >/dev/null 2>&1; then
+  notify-send "burn-iso" "Finished flashing $(basename "$ISO_FILE") to $DEV_REAL" || true
+fi
