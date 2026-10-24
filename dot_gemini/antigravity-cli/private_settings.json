@@ -1,0 +1,21 @@
+{
+  "allowNonWorkspaceAccess": true,
+  "artifactReviewPolicy": "always-proceed",
+  "colorScheme": "solarized dark",
+  "enableTerminalSandbox": false,
+  "permissions": {
+    "allow": [
+      "command(git status)",
+      "command(ls)",
+      "command(find . -maxdepth 2 -name \"*.md\")",
+      "command(grep)"
+    ]
+  },
+  "toolPermission": "always-proceed",
+  "trustedWorkspaces": [
+    "/Users/shaungarwood/vaults/J\u0026S Notes",
+    "/Users/shaungarwood/.config/nvim",
+    "/Users/shaungarwood/repos",
+    "/Users/shaungarwood"
+  ]
+}
