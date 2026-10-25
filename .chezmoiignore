@@ -31,6 +31,11 @@ Brewfile
 .local/bin/start-wlsunset
 {{- end }}
 
+{{ if ne .chezmoi.os "darwin" -}}
+# macOS-only login profile (/opt/homebrew, Obsidian.app)
+.zprofile
+{{- end }}
+
 {{ if has .chezmoi.hostname .hostnames.personal_remote -}}
 # Skip on remote servers
 .config/nvim-minimal
@@ -46,12 +51,14 @@ Brewfile
 .config/zsh/secrets.zsh
 
 {{ if not (has .chezmoi.hostname .hostnames.work) -}}
-# Work-only Claude skills. These read the work notes vault at ~/vaults/Work,
-# which only exists on work machines, so they are dead weight elsewhere.
+# Work-only Claude skills (Obsidian work vault, Linear, promptbox team repo).
 # The weekly-update skill is deliberately absent here: it names an internal
 # repo and a Slack user id, so it is not tracked in this public repo at all.
-.claude/skills/people
 .claude/skills/career-note
+.claude/skills/daily
+.claude/skills/flashcard
+.claude/skills/people
+.claude/skills/sync-to-promptbox
 
 # memwatch diagnoses the compressor/swap kernel panics on the work laptop and
 # is driven by a macOS LaunchAgent that only exists there.

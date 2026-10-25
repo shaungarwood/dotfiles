@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 # Claude Code status line.
 #
-# Doubles as the trigger for ~/.claude/hooks/zellij-tab-sync.sh: the statusLine
-# JSON is the only payload Claude hands out that contains .session_name, and it
-# re-renders within ~300ms of a /rename.
-#
 #   work-thing · Opus 5 · ~/repos/ccapi/main  main  23%
 
 set -u
@@ -13,21 +9,19 @@ json=$(cat)
 
 # One field per line — bash treats tab as IFS whitespace, so a tab-separated
 # read would collapse empty fields and shift the values left.
-name="" model="" dir="" ctx="" sid=""
+name="" model="" dir="" ctx=""
 {
     read -r name || true
     read -r model || true
     read -r dir || true
     read -r ctx || true
-    read -r sid || true
 } <<EOF
 $(printf '%s' "$json" | jq -r '
   .session_name // "",
   .model.display_name // "",
   .workspace.current_dir // .cwd // "",
   (if .context_window.used_percentage == null then ""
-   else (.context_window.used_percentage | floor | tostring) end),
-  .session_id // ""')
+   else (.context_window.used_percentage | floor | tostring) end)')
 EOF
 
 dim=$'\033[38;2;88;110;117m'  # solarized base01
@@ -63,20 +57,4 @@ add() { out="${out:+$out ${dim}·${off} }$1"; }
 [ -n "$ctx" ] && add "$ctx_color$ctx%$off"
 
 printf '%s' "$out"
-
-# Sync the zellij tab last, so the status line is already rendered no matter how
-# the zellij IPC behaves. statusLine.refreshInterval makes this run on a timer
-# (a /rename does not itself trigger a re-render), so keep the steady state free:
-# work out what the tab name should be and only spawn the syncer when it differs
-# from what we last applied. Must match the target format in the syncer.
-target=""
-if [ -n "$name" ]; then
-    tab=$name
-    [ ${#tab} -gt 28 ] && tab="${tab:0:27}…"
-    target=":$tab"
-fi
-applied="$HOME/.claude/zellij-tab-sync/$sid"
-if [ -n "$sid" ] && { [ ! -f "$applied" ] || [ "$target" != "$(cat "$applied")" ]; }; then
-    printf '%s' "$json" | "$HOME/.claude/hooks/zellij-tab-sync.sh" >/dev/null 2>&1
-fi
 exit 0
